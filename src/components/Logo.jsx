@@ -1,4 +1,4 @@
-const LOGO_SRC = `${import.meta.env.BASE_URL}assets/logo-sapience-placeholder.webp`;
+const LOGO_SRC = `/assets/logo-sapience-placeholder.png`;
 
 export default function Logo({ size = 88, withText = true, light = true }) {
   return (
