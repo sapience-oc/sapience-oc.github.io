@@ -31,7 +31,9 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run dev
+        run: npm run build
+        env:
+          VITE_USE_MOCK: true
 
       - name: Upload do artefato do Pages
         uses: actions/upload-pages-artifact@v3
