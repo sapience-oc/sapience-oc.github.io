@@ -1,0 +1,28 @@
+.bottom-nav {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: var(--surface);
+  padding: 10px 8px calc(10px + var(--safe-bottom));
+  border-top: 1px solid var(--surface-muted);
+}
+
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.bottom-nav-item.active {
+  color: var(--olive-600);
+  background: var(--surface-muted);
+}

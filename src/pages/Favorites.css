@@ -1,0 +1,31 @@
+.fav-star {
+  font-size: 28px;
+  color: #ffd75e;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.fav-title {
+  font-family: var(--font-display);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+.fav-title.strong {
+  font-weight: 800;
+}
+
+.fav-calendar-btn {
+  display: block;
+  width: 100%;
+  background: var(--surface);
+  color: var(--olive-700);
+  font-weight: 700;
+  font-size: 13px;
+  padding: 15px;
+  border-radius: var(--radius-pill);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14);
+  text-align: center;
+}

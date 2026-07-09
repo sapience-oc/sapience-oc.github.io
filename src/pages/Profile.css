@@ -1,0 +1,133 @@
+.profile-header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.profile-header .avatar {
+  margin-bottom: 10px;
+}
+
+.profile-name {
+  font-family: var(--font-display);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.profile-sub {
+  color: #fff;
+  font-size: 12px;
+  opacity: 0.85;
+  margin: 4px 0 0;
+}
+
+.stat-box {
+  background: var(--olive-700);
+  color: #fff;
+  border-radius: var(--radius-sm);
+  padding: 14px 6px;
+  text-align: center;
+}
+.stat-value {
+  font-size: 19px;
+  font-weight: 800;
+  font-family: var(--font-display);
+}
+.stat-label {
+  font-size: 9.5px;
+  opacity: 0.85;
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.settings-list {
+  background: var(--surface);
+  border: 1px solid var(--surface-muted);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.settings-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 16px;
+  border-bottom: 1px solid var(--surface-muted);
+  text-align: left;
+}
+.settings-row:last-child {
+  border-bottom: none;
+}
+.settings-row.no-hover {
+  cursor: default;
+}
+
+.settings-row-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--surface-muted);
+  color: var(--olive-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.settings-row-label {
+  flex: 1;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.settings-row-chip {
+  background: var(--gold);
+  color: #4a3a05;
+  font-size: 10.5px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+}
+
+.inep-box {
+  background: var(--surface);
+  border: 1px solid var(--surface-muted);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-bottom: 22px;
+}
+
+.info-label {
+  font-size: 10.5px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  margin-bottom: 6px;
+}
+
+.info-value {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.logout-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--danger);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 12px;
+}

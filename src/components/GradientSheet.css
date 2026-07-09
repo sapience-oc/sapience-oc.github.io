@@ -1,0 +1,47 @@
+.gsheet {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+}
+
+.gsheet-header {
+  position: relative;
+  z-index: 1;
+  transition: height 0.05s linear;
+  padding: calc(18px + var(--safe-top)) 22px 20px;
+  display: flex;
+  align-items: flex-start;
+  overflow: hidden;
+}
+
+.gsheet-header-inner {
+  width: 100%;
+  transition: opacity 0.1s linear;
+}
+
+.gsheet-sheet {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--surface);
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
+  z-index: 2;
+  scrollbar-width: none;
+}
+.gsheet-sheet::-webkit-scrollbar {
+  display: none;
+}
+
+.gsheet-sheet-content {
+  padding: 42px 20px calc(100px + var(--safe-bottom));
+  min-height: 100%;
+}
+
+.overlap-card {
+  margin-top: -34px;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 3;
+}

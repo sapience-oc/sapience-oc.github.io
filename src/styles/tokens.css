@@ -1,0 +1,72 @@
+:root {
+  --grad-1: #c9863e;
+  --grad-2: #a9863f;
+  --grad-3: #7c7a40;
+  --grad-4: #dab35a;
+  --grad-5: #967036;
+
+  --bg-app: #f6f7ef;
+  --surface: #ffffff;
+  --surface-muted: #eef1e1;
+  --input-bg: #f3f5e3;
+
+  --olive-900: #3a3f1c;
+  --olive-700: #4a5220;
+  --olive-600: #5b6428;
+  --olive-500: #767c3c;
+  --olive-400: #8f9a4c;
+  --olive-200: #cdd6a5;
+
+  --text-primary: #33361c;
+  --text-secondary: #6b6f52;
+  --text-inverse: #ffffff;
+
+  --gold: #e0b23c;
+  --danger: #b3492f;
+  --success: #4a7c3f;
+
+  --font-display: 'Poppins', 'Segoe UI', sans-serif;
+  --font-body: 'Poppins', 'Segoe UI', sans-serif;
+
+  --app-max-width: 480px;
+  --radius-lg: 28px;
+  --radius-md: 18px;
+  --radius-sm: 12px;
+  --radius-pill: 999px;
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  --shell-bg: #1c1c1c;
+}
+
+[data-theme='dark'] {
+  --bg-app: #1a1c12;
+  --surface: #23261a;
+  --surface-muted: #2c2f1f;
+  --input-bg: #2c2f1f;
+
+  --text-primary: #eef1e1;
+  --text-secondary: #a8ad91;
+  --text-inverse: #ffffff;
+
+  --olive-200: #3a4020;
+  --olive-400: #8f9a4c;
+  --olive-500: #8a9450;
+  --olive-600: #a3ae63;
+  --olive-700: #c3cd8f;
+  --olive-900: #eef1e1;
+
+  --shell-bg: #000000;
+}
+
+.gradient-bg {
+  background: linear-gradient(
+    145deg,
+    var(--grad-1) 0%,
+    var(--grad-4) 22%,
+    var(--grad-2) 48%,
+    var(--grad-3) 72%,
+    var(--grad-5) 100%
+  );
+}

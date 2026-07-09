@@ -1,0 +1,226 @@
+.detail-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.detail-image {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.15);
+}
+.detail-image.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.detail-title-text {
+  min-width: 0;
+}
+
+.detail-title {
+  font-family: var(--font-display);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  margin: 0 0 2px;
+}
+
+.detail-subtitle {
+  color: #fff;
+  font-size: 11.5px;
+  opacity: 0.85;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.edition-picker {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.edition-picker::-webkit-scrollbar {
+  display: none;
+}
+
+.edition-pill {
+  flex-shrink: 0;
+  padding: 7px 16px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+.edition-pill.active {
+  background: #fff;
+  color: var(--olive-700);
+}
+
+.detail-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.detail-tag {
+  background: var(--surface-muted);
+  color: var(--olive-700);
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+}
+.detail-tag.status {
+  background: var(--olive-500);
+  color: #fff;
+}
+
+.detail-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.detail-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.info-box {
+  background: var(--surface);
+  border: 1px solid var(--surface-muted);
+  border-radius: var(--radius-sm);
+  padding: 13px 14px;
+  min-width: 0;
+}
+.info-box.link {
+  display: block;
+  cursor: pointer;
+}
+.info-value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.regulamento-link {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: var(--surface-muted);
+  color: var(--olive-700);
+  font-weight: 700;
+  font-size: 13px;
+  padding: 14px;
+  border-radius: var(--radius-pill);
+  margin-bottom: 26px;
+}
+
+.thread-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.section-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.section-title-row .section-title {
+  margin: 0;
+}
+
+.new-topic-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--surface-muted);
+  color: var(--olive-700);
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 8px 12px;
+  border-radius: var(--radius-pill);
+}
+
+.new-topic-form {
+  background: var(--surface-muted);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  margin-bottom: 18px;
+}
+
+.new-topic-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+}
+.new-topic-header button {
+  color: var(--text-secondary);
+}
+
+.thread-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--surface-muted);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  text-align: left;
+  width: 100%;
+}
+
+.thread-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.thread-meta {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.fav-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--olive-500);
+  color: #fff;
+  font-weight: 700;
+  font-size: 13.5px;
+  padding: 15px;
+  border-radius: var(--radius-pill);
+  margin-top: 6px;
+}
+.fav-btn.active {
+  background: var(--olive-700);
+}
