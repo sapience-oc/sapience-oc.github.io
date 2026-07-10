@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout';
 import BackHeader from '../components/BackHeader';
+import AvatarUpload from '../components/AvatarUpload';
 import { TextField, SelectField, PrimaryButton } from '../components/FormControls';
 import { useAuth } from '../context/AuthContext';
 import { listSeriesEscolares } from '../api/usuario';
@@ -13,9 +14,14 @@ const initialForm = {
   serieEscolarId: '',
   inep: '',
   areaIds: [],
+  avatar: null,
   password: '',
   confirmPassword: '',
 };
+
+function apenasNumeros(valor) {
+  return valor.replace(/\D/g, '');
+}
 
 export default function Register() {
   const { register } = useAuth();
@@ -65,6 +71,7 @@ export default function Register() {
         serieEscolarId: form.serieEscolarId,
         inep: form.inep,
         areaIds: form.areaIds,
+        avatar: form.avatar,
       });
       navigate('/login', {
         replace: true,
@@ -84,6 +91,12 @@ export default function Register() {
 
       {error && <div className="auth-banner error">{error}</div>}
 
+      <AvatarUpload
+        value={form.avatar}
+        initials={form.nome ? form.nome.slice(0, 2).toUpperCase() : '??'}
+        onChange={(avatar) => setForm((prev) => ({ ...prev, avatar }))}
+      />
+
       <form onSubmit={handleSubmit}>
         <TextField label="*E-mail" type="email" value={form.email} onChange={update('email')} required />
         <TextField label="*Nome" type="text" value={form.nome} onChange={update('nome')} required />
@@ -97,7 +110,15 @@ export default function Register() {
             </option>
           ))}
         </SelectField>
-        <TextField label="INEP da escola" type="text" value={form.inep} onChange={update('inep')} />
+        <TextField
+          label="INEP da escola"
+          optional
+          type="tel"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          value={form.inep}
+          onChange={(e) => setForm((prev) => ({ ...prev, inep: apenasNumeros(e.target.value) }))}
+        />
 
         <span className="field-label" style={{ display: 'block', marginBottom: 8 }}>
           *Areas de interesse
@@ -116,14 +137,14 @@ export default function Register() {
         </div>
 
         <TextField
-          label="Senha"
+          label="*Senha"
           type="password"
           value={form.password}
           onChange={update('password')}
           required
         />
         <TextField
-          label="Confirme a senha"
+          label="*Confirme a senha"
           type="password"
           value={form.confirmPassword}
           onChange={update('confirmPassword')}

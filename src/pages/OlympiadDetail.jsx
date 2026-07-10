@@ -5,6 +5,7 @@ import GradientSheet from '../components/GradientSheet';
 import BackHeader from '../components/BackHeader';
 import { TextField, TextArea, PrimaryButton } from '../components/FormControls';
 import { getOlimpiada, getEdicao, listPosts, createPost, toggleFavorito } from '../api/olimpiadas';
+import { openExternal } from '../utils/links';
 import './OlympiadDetail.css';
 
 const STATUS_LABEL = {
@@ -196,29 +197,27 @@ export default function OlympiadDetail() {
               <div className="info-value">{edicao.olimpiada.organizador || '-'}</div>
             </div>
             {edicao.olimpiada.siteOficial && (
-              <a
+              <button
+                type="button"
                 className="info-box link"
-                href={edicao.olimpiada.siteOficial}
-                target="_blank"
-                rel="noreferrer"
+                onClick={() => openExternal(edicao.olimpiada.siteOficial)}
               >
                 <div className="info-label">Site oficial</div>
                 <div className="info-value">
                   Visitar <ExternalLink size={12} />
                 </div>
-              </a>
+              </button>
             )}
           </div>
 
           {edicao.regulamento && (
-            <a
+            <button
+              type="button"
               className="regulamento-link"
-              href={edicao.regulamento}
-              target="_blank"
-              rel="noreferrer"
+              onClick={() => openExternal(edicao.regulamento)}
             >
               Ver regulamento / edital desta edicao
-            </a>
+            </button>
           )}
 
           {edicao.forum && (

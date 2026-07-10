@@ -1,27 +1,36 @@
 import './FormControls.css';
 
-export function TextField({ label, ...props }) {
+function FieldLabel({ label, optional }) {
+  return (
+    <span className="field-label">
+      {label}
+      {optional && <span className="field-optional"> (opcional)</span>}
+    </span>
+  );
+}
+
+export function TextField({ label, optional, ...props }) {
   return (
     <label className="field">
-      <span className="field-label">{label}</span>
+      <FieldLabel label={label} optional={optional} />
       <input className="field-input" {...props} />
     </label>
   );
 }
 
-export function TextArea({ label, ...props }) {
+export function TextArea({ label, optional, ...props }) {
   return (
     <label className="field">
-      <span className="field-label">{label}</span>
+      <FieldLabel label={label} optional={optional} />
       <textarea className="field-input field-textarea" {...props} />
     </label>
   );
 }
 
-export function SelectField({ label, children, ...props }) {
+export function SelectField({ label, optional, children, ...props }) {
   return (
     <label className="field">
-      <span className="field-label">{label}</span>
+      <FieldLabel label={label} optional={optional} />
       <select className="field-input" {...props}>
         {children}
       </select>

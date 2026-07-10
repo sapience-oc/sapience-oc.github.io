@@ -3,9 +3,12 @@
 //
 // O formato segue de perto o diagrama de classes do backend real
 // (Usuario, Olimpiada, EdicaoOlimpiada, Area, Nivel, TipoInscricao,
-// TipoPrazo, Prazo, Colecao, AcompanhamentoColecao, Forum, Post,
-// Comentario), inclusive nos nomes dos campos — assim, quando o FastAPI
-// estiver pronto, o "encaixe" das respostas reais deve ser quase direto.
+// TipoPrazo, Prazo, Acompanhamento, Forum, Post, Comentario), inclusive
+// nos nomes dos campos — assim, quando o FastAPI estiver pronto, o
+// "encaixe" das respostas reais deve ser quase direto.
+//
+// Coleções foram removidas do modelo por enquanto: o usuário só tem
+// favoritos diretos de Olimpiada, sem a camada extra de agrupamento.
 //
 // As tabelas abaixo guardam so os IDs de relacionamento (como um banco
 // relacional faria). Quem resolve os relacionamentos (JOINs) e o
@@ -222,20 +225,16 @@ export let usuarios = [
   { id: 'usr5', nome: 'Cristina', email: 'cristina@exemplo.com', avatar: null },
 ];
 
-export let colecoes = [
-  { id: 'col1', nome: 'Minhas olimpiadas', corHex: '#767c3c', usuarioId: 'usr1', edicaoIds: [] },
-];
-
-// AcompanhamentoColecao: aqui mora tanto "estou inscrito" quanto a
-// premiacao (quando existe) de uma edicao especifica para o usuario.
+// Acompanhamento: aqui mora tanto "estou inscrito" quanto a premiacao
+// (quando existe) de uma edicao especifica para o usuario.
 export let acompanhamentos = [
-  { id: 'ac1', usuarioId: 'usr1', edicaoId: 'ed-oba-2026', inscrito: true, premiacao: 'Ouro', observacoes: null, colecaoId: null },
-  { id: 'ac2', usuarioId: 'usr1', edicaoId: 'ed-obt-2026', inscrito: true, premiacao: null, observacoes: null, colecaoId: 'col1' },
-  { id: 'ac3', usuarioId: 'usr1', edicaoId: 'ed-obt-2025', inscrito: true, premiacao: 'Prata', observacoes: null, colecaoId: null },
-  { id: 'ac4', usuarioId: 'usr1', edicaoId: 'ed-obb-2024', inscrito: true, premiacao: 'Bronze', observacoes: null, colecaoId: null },
-  { id: 'ac5', usuarioId: 'usr1', edicaoId: 'ed-obr-2024', inscrito: true, premiacao: 'Bronze', observacoes: null, colecaoId: null },
-  { id: 'ac6', usuarioId: 'usr1', edicaoId: 'ed-obb-2026', inscrito: true, premiacao: null, observacoes: null, colecaoId: 'col1' },
-  { id: 'ac7', usuarioId: 'usr1', edicaoId: 'ed-canguru-2026', inscrito: false, premiacao: null, observacoes: null, colecaoId: 'col1' },
+  { id: 'ac1', usuarioId: 'usr1', edicaoId: 'ed-oba-2026', inscrito: true, premiacao: 'Ouro', observacoes: null },
+  { id: 'ac2', usuarioId: 'usr1', edicaoId: 'ed-obt-2026', inscrito: true, premiacao: null, observacoes: null },
+  { id: 'ac3', usuarioId: 'usr1', edicaoId: 'ed-obt-2025', inscrito: true, premiacao: 'Prata', observacoes: null },
+  { id: 'ac4', usuarioId: 'usr1', edicaoId: 'ed-obb-2024', inscrito: true, premiacao: 'Bronze', observacoes: null },
+  { id: 'ac5', usuarioId: 'usr1', edicaoId: 'ed-obr-2024', inscrito: true, premiacao: 'Bronze', observacoes: null },
+  { id: 'ac6', usuarioId: 'usr1', edicaoId: 'ed-obb-2026', inscrito: true, premiacao: null, observacoes: null },
+  { id: 'ac7', usuarioId: 'usr1', edicaoId: 'ed-canguru-2026', inscrito: false, premiacao: null, observacoes: null },
 ];
 
 // Usuario "logado" no modo mock.

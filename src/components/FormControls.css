@@ -13,6 +13,14 @@
   text-transform: uppercase;
 }
 
+.field-optional {
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  opacity: 0.6;
+}
+
 .field-input {
   background: var(--input-bg);
   border: 1px solid transparent;

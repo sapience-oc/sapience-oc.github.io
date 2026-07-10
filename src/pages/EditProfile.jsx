@@ -1,20 +1,21 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Camera, Trash2 } from 'lucide-react';
 import GradientSheet from '../components/GradientSheet';
 import BackHeader from '../components/BackHeader';
-import Avatar from '../components/Avatar';
+import AvatarUpload from '../components/AvatarUpload';
 import { TextField, SelectField, PrimaryButton } from '../components/FormControls';
 import { useAuth } from '../context/AuthContext';
 import { listSeriesEscolares } from '../api/usuario';
 import { listAreas } from '../api/olimpiadas';
-import { readAndResizeImage } from '../utils/image';
 import './EditProfile.css';
+
+function apenasNumeros(valor) {
+  return valor.replace(/\D/g, '');
+}
 
 export default function EditProfile() {
   const { user, updateProfile } = useAuth();
   const navigate = useNavigate();
-  const fileInputRef = useRef(null);
   const [series, setSeries] = useState([]);
   const [areas, setAreas] = useState([]);
   const [form, setForm] = useState({
@@ -25,7 +26,6 @@ export default function EditProfile() {
     areaIds: user?.areaIds || [],
     avatar: user?.avatar || null,
   });
-  const [avatarError, setAvatarError] = useState('');
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -45,23 +45,6 @@ export default function EditProfile() {
         ? prev.areaIds.filter((id) => id !== areaId)
         : [...prev.areaIds, areaId],
     }));
-  }
-
-  async function handleAvatarChange(e) {
-    const file = e.target.files?.[0];
-    e.target.value = ''; // permite escolher o mesmo arquivo de novo depois
-    if (!file) return;
-    setAvatarError('');
-    try {
-      const dataUrl = await readAndResizeImage(file, { maxSize: 400, quality: 0.85 });
-      setForm((prev) => ({ ...prev, avatar: dataUrl }));
-    } catch (err) {
-      setAvatarError(err.message || 'Nao foi possivel usar essa imagem.');
-    }
-  }
-
-  function handleRemoveAvatar() {
-    setForm((prev) => ({ ...prev, avatar: null }));
   }
 
   async function handleSubmit(e) {
@@ -87,43 +70,24 @@ export default function EditProfile() {
         </div>
       }
     >
-      <div className="avatar-editor">
-        <div className="avatar-editor-preview">
-          <Avatar src={form.avatar} initials={user?.initials} size={84} />
-          <button
-            type="button"
-            className="avatar-editor-camera"
-            onClick={() => fileInputRef.current?.click()}
-            aria-label="Trocar foto de perfil"
-          >
-            <Camera size={15} />
-          </button>
-        </div>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={handleAvatarChange}
-        />
-        <div className="avatar-editor-actions">
-          <button type="button" className="avatar-editor-link" onClick={() => fileInputRef.current?.click()}>
-            Trocar foto
-          </button>
-          {form.avatar && (
-            <button type="button" className="avatar-editor-link danger" onClick={handleRemoveAvatar}>
-              <Trash2 size={13} />
-              Remover
-            </button>
-          )}
-        </div>
-        {avatarError && <div className="auth-banner error">{avatarError}</div>}
-      </div>
+      <AvatarUpload
+        value={form.avatar}
+        initials={user?.initials}
+        onChange={(avatar) => setForm((prev) => ({ ...prev, avatar }))}
+      />
 
       <form onSubmit={handleSubmit}>
         <TextField label="Nome" type="text" value={form.nome} onChange={update('nome')} required />
         <TextField label="E-mail" type="email" value={form.email} onChange={update('email')} required />
-        <TextField label="INEP da escola" type="text" value={form.inep} onChange={update('inep')} />
+        <TextField
+          label="INEP da escola"
+          optional
+          type="tel"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          value={form.inep}
+          onChange={(e) => setForm((prev) => ({ ...prev, inep: apenasNumeros(e.target.value) }))}
+        />
         <SelectField label="Serie escolar" value={form.serieEscolarId} onChange={update('serieEscolarId')}>
           <option value="" disabled>
             Selecione

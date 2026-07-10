@@ -67,7 +67,7 @@ export async function listPremiacoes() {
 }
 
 // Cria ou atualiza (upsert) o acompanhamento do usuario para uma edicao.
-export async function salvarAcompanhamento({ edicaoId, premiacao, inscrito, observacoes, colecaoId }) {
+export async function salvarAcompanhamento({ edicaoId, premiacao, inscrito, observacoes }) {
   if (USE_MOCK) {
     const uid = currentUserId();
     if (!uid) throw new Error('Usuario nao autenticado.');
@@ -78,7 +78,6 @@ export async function salvarAcompanhamento({ edicaoId, premiacao, inscrito, obse
       if (premiacao !== undefined) existente.premiacao = premiacao;
       if (inscrito !== undefined) existente.inscrito = inscrito;
       if (observacoes !== undefined) existente.observacoes = observacoes;
-      if (colecaoId !== undefined) existente.colecaoId = colecaoId;
     } else {
       existente = {
         id: store.generateId('ac'),
@@ -87,13 +86,12 @@ export async function salvarAcompanhamento({ edicaoId, premiacao, inscrito, obse
         inscrito: inscrito ?? true,
         premiacao: premiacao ?? null,
         observacoes: observacoes ?? null,
-        colecaoId: colecaoId ?? null,
       };
       store.acompanhamentos.push(existente);
     }
     return mockDelay(db.serializeAcompanhamento(existente));
   }
-  // return request('/acompanhamentos', { method: 'POST', body: { edicaoId, premiacao, inscrito, observacoes, colecaoId } });
+  // return request('/acompanhamentos', { method: 'POST', body: { edicaoId, premiacao, inscrito, observacoes } });
 }
 
 export async function removerPremiacao(acompanhamentoId) {
