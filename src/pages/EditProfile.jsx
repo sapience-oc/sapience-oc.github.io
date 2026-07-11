@@ -30,8 +30,12 @@ export default function EditProfile() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    listSeriesEscolares().then(setSeries);
-    listAreas().then(setAreas);
+    listSeriesEscolares()
+      .then(setSeries)
+      .catch((err) => console.error('Erro ao carregar series escolares:', err));
+    listAreas()
+      .then(setAreas)
+      .catch((err) => console.error('Erro ao carregar areas:', err));
   }, []);
 
   function update(field) {

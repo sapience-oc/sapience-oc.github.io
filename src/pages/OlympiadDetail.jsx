@@ -86,21 +86,37 @@ export default function OlympiadDetail() {
   const [edicao, setEdicao] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState(null);
   const [showNewTopic, setShowNewTopic] = useState(false);
 
   useEffect(() => {
+    let ativo = true;
     setLoading(true);
-    getOlimpiada(id).then((data) => {
-      setOlimpiada(data);
-      const inicial = data?.edicaoAtual?.id || data?.edicoes?.[0]?.id || null;
-      setEdicaoId(inicial);
-      setLoading(false);
-    });
+    setErro(null);
+    getOlimpiada(id)
+      .then((data) => {
+        if (!ativo) return;
+        setOlimpiada(data);
+        const inicial = data?.edicaoAtual?.id || data?.edicoes?.[0]?.id || null;
+        setEdicaoId(inicial);
+      })
+      .catch((err) => {
+        console.error('Erro ao carregar olimpiada:', err);
+        if (ativo) setErro('Nao foi possivel carregar essa olimpiada agora.');
+      })
+      .finally(() => {
+        if (ativo) setLoading(false);
+      });
+    return () => {
+      ativo = false;
+    };
   }, [id]);
 
   useEffect(() => {
     if (!edicaoId) return;
-    getEdicao(edicaoId).then(setEdicao);
+    getEdicao(edicaoId)
+      .then(setEdicao)
+      .catch((err) => console.error('Erro ao carregar edicao:', err));
   }, [edicaoId]);
 
   useEffect(() => {
@@ -109,7 +125,9 @@ export default function OlympiadDetail() {
       setPosts([]);
       return;
     }
-    listPosts(edicao.forum.id).then((data) => setPosts(data));
+    listPosts(edicao.forum.id)
+      .then((data) => setPosts(data))
+      .catch((err) => console.error('Erro ao carregar posts:', err));
   }, [edicao?.forum?.id]);
 
   async function handleToggleFavorito() {
@@ -118,6 +136,14 @@ export default function OlympiadDetail() {
   }
 
   if (loading) return null;
+
+  if (erro) {
+    return (
+      <GradientSheet maxHeight={110} minHeight={90} headerContent={<BackHeader onBack={() => navigate(-1)} />}>
+        <p className="muted-text">{erro}</p>
+      </GradientSheet>
+    );
+  }
 
   if (!olimpiada) {
     return (

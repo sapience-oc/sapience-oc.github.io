@@ -17,7 +17,9 @@ export default function Profile() {
   const [acompanhamentos, setAcompanhamentos] = useState([]);
 
   useEffect(() => {
-    listAcompanhamentos().then(setAcompanhamentos);
+    listAcompanhamentos()
+      .then(setAcompanhamentos)
+      .catch((err) => console.error('Erro ao carregar acompanhamentos:', err));
   }, []);
 
   const totalPremios = acompanhamentos.filter((a) => a.premiacao).length;

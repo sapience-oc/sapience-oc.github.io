@@ -32,16 +32,30 @@ function formatarDataLonga(iso) {
 export default function CalendarPage() {
   const navigate = useNavigate();
   const [year, setYear] = useState(2026);
-  const [monthIndex, setMonthIndex] = useState(5); // Junho/2026
+  const [monthIndex, setMonthIndex] = useState(5);
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
 
   useEffect(() => {
-    listCalendarEvents().then((data) => {
-      setEvents(data);
-      setLoading(false);
-    });
+    let ativo = true;
+    setLoading(true);
+    setErro(null);
+    listCalendarEvents()
+      .then((data) => {
+        if (ativo) setEvents(data);
+      })
+      .catch((err) => {
+        console.error('Erro ao carregar calendario:', err);
+        if (ativo) setErro('Nao foi possivel carregar o calendario agora.');
+      })
+      .finally(() => {
+        if (ativo) setLoading(false);
+      });
+    return () => {
+      ativo = false;
+    };
   }, []);
 
   const cells = useMemo(() => buildMonthGrid(year, monthIndex), [year, monthIndex]);
@@ -135,7 +149,8 @@ export default function CalendarPage() {
 
         <div className="cal-events">
           {loading && <p className="muted-text">Carregando...</p>}
-          {!loading && eventosDoMes.length === 0 && (
+          {!loading && erro && <p className="muted-text">{erro}</p>}
+          {!loading && !erro && eventosDoMes.length === 0 && (
             <p className="muted-text">Nenhum prazo nesse mes para suas olimpiadas favoritas.</p>
           )}
           {eventosDoMes.map((e) => (

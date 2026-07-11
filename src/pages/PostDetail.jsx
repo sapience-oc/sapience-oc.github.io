@@ -14,14 +14,29 @@ export default function PostDetail() {
   const [mensagem, setMensagem] = useState('');
   const [enviando, setEnviando] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState(null);
 
   useEffect(() => {
+    let ativo = true;
     setLoading(true);
-    getPost(postId).then((data) => {
-      setPost(data);
-      setLoading(false);
-    });
-    listComentarios(postId).then(setComentarios);
+    setErro(null);
+    getPost(postId)
+      .then((data) => {
+        if (ativo) setPost(data);
+      })
+      .catch((err) => {
+        console.error('Erro ao carregar post:', err);
+        if (ativo) setErro('Nao foi possivel carregar essa duvida agora.');
+      })
+      .finally(() => {
+        if (ativo) setLoading(false);
+      });
+    listComentarios(postId)
+      .then(setComentarios)
+      .catch((err) => console.error('Erro ao carregar comentarios:', err));
+    return () => {
+      ativo = false;
+    };
   }, [postId]);
 
   async function handleSend(e) {
@@ -38,6 +53,14 @@ export default function PostDetail() {
   }
 
   if (loading) return null;
+
+  if (erro) {
+    return (
+      <GradientSheet maxHeight={110} minHeight={90} headerContent={<BackHeader onBack={() => navigate(-1)} />}>
+        <p className="muted-text">{erro}</p>
+      </GradientSheet>
+    );
+  }
 
   if (!post) {
     return (

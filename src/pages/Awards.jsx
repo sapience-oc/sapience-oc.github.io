@@ -19,7 +19,9 @@ function AddAwardForm({ onSaved, onCancel }) {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    listOlimpiadas().then(setOlimpiadas);
+    listOlimpiadas()
+      .then(setOlimpiadas)
+      .catch((err) => console.error('Erro ao carregar olimpiadas:', err));
   }, []);
 
   useEffect(() => {
@@ -28,12 +30,24 @@ function AddAwardForm({ onSaved, onCancel }) {
       setEdicaoId('');
       return;
     }
+    let ativo = true;
     setLoadingEdicoes(true);
-    getOlimpiada(olimpiadaId).then((data) => {
-      setEdicoes(data?.edicoes || []);
-      setEdicaoId('');
-      setLoadingEdicoes(false);
-    });
+    getOlimpiada(olimpiadaId)
+      .then((data) => {
+        if (!ativo) return;
+        setEdicoes(data?.edicoes || []);
+        setEdicaoId('');
+      })
+      .catch((err) => {
+        console.error('Erro ao carregar edicoes:', err);
+        if (ativo) setError('Nao foi possivel carregar as edicoes dessa olimpiada.');
+      })
+      .finally(() => {
+        if (ativo) setLoadingEdicoes(false);
+      });
+    return () => {
+      ativo = false;
+    };
   }, [olimpiadaId]);
 
   async function handleSubmit(e) {
@@ -128,14 +142,19 @@ export default function Awards() {
   const navigate = useNavigate();
   const [premiacoes, setPremiacoes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
   function reload() {
     setLoading(true);
-    listPremiacoes().then((data) => {
-      setPremiacoes(data);
-      setLoading(false);
-    });
+    setErro(null);
+    listPremiacoes()
+      .then((data) => setPremiacoes(data))
+      .catch((err) => {
+        console.error('Erro ao carregar premiacoes:', err);
+        setErro('Nao foi possivel carregar suas premiacoes agora.');
+      })
+      .finally(() => setLoading(false));
   }
 
   useEffect(() => {
@@ -174,7 +193,8 @@ export default function Awards() {
       )}
 
       {loading && <p className="muted-text">Carregando...</p>}
-      {!loading && premiacoes.length === 0 && (
+      {!loading && erro && <p className="muted-text">{erro}</p>}
+      {!loading && !erro && premiacoes.length === 0 && (
         <p className="muted-text">Voce ainda nao registrou nenhuma premiacao.</p>
       )}
 

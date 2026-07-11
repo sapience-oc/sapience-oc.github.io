@@ -17,17 +17,32 @@ export default function Home() {
   const [olimpiadas, setOlimpiadas] = useState([]);
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState(null);
 
   useEffect(() => {
-    listAreas().then(setAreas);
+    listAreas()
+      .then((data) => setAreas(data))
+      .catch((err) => console.error('Erro ao carregar areas:', err));
   }, []);
 
   useEffect(() => {
+    let ativo = true;
     setLoading(true);
-    listOlimpiadas({ areaId: activeAreaId }).then((data) => {
-      setOlimpiadas(data);
-      setLoading(false);
-    });
+    setErro(null);
+    listOlimpiadas({ areaId: activeAreaId })
+      .then((data) => {
+        if (ativo) setOlimpiadas(data);
+      })
+      .catch((err) => {
+        console.error('Erro ao carregar olimpiadas:', err);
+        if (ativo) setErro('Nao foi possivel carregar as olimpiadas agora. Tente novamente.');
+      })
+      .finally(() => {
+        if (ativo) setLoading(false);
+      });
+    return () => {
+      ativo = false;
+    };
   }, [activeAreaId]);
 
   async function handleToggleFavorito(id) {
@@ -103,7 +118,8 @@ export default function Home() {
 
         <h2 className="section-title">Proximos prazos</h2>
         {loading && <p className="muted-text">Carregando...</p>}
-        {!loading && lista.length === 0 && (
+        {!loading && erro && <p className="muted-text">{erro}</p>}
+        {!loading && !erro && lista.length === 0 && (
           <p className="muted-text">Nenhuma olimpiada encontrada para esse filtro.</p>
         )}
         {lista.map((o) => (

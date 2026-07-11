@@ -9,20 +9,42 @@ import './Favorites.css';
 export default function Favorites() {
   const [favoritos, setFavoritos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    listFavoritos().then((data) => {
-      setFavoritos(data);
-      setLoading(false);
-    });
+    let ativo = true;
+
+    setLoading(true);
+    setErro(null);
+    listFavoritos()
+      .then((data) => {
+        if (!ativo) return;
+        setFavoritos(data);
+      })
+      .catch((err) => {
+        if (!ativo) return;
+        console.error('Erro ao carregar favoritos:', err);
+        setErro('Nao foi possivel carregar seus favoritos agora. Tente novamente.');
+      })
+      .finally(() => {
+        if (ativo) setLoading(false);
+      });
+
+    return () => {
+      ativo = false;
+    };
   }, []);
 
   async function handleToggleFavorito(id) {
-    const updated = await toggleFavorito(id);
-    setFavoritos((prev) =>
-      updated.favoritado ? prev.map((o) => (o.id === id ? updated : o)) : prev.filter((o) => o.id !== id)
-    );
+    try {
+      const updated = await toggleFavorito(id);
+      setFavoritos((prev) =>
+        updated.favoritado ? prev.map((o) => (o.id === id ? updated : o)) : prev.filter((o) => o.id !== id)
+      );
+    } catch (err) {
+      console.error('Erro ao favoritar/desfavoritar:', err);
+    }
   }
 
   return (
@@ -43,7 +65,8 @@ export default function Favorites() {
         </button>
 
         {loading && <p className="muted-text">Carregando...</p>}
-        {!loading && favoritos.length === 0 && (
+        {!loading && erro && <p className="muted-text">{erro}</p>}
+        {!loading && !erro && favoritos.length === 0 && (
           <p className="muted-text">Voce ainda nao favoritou nenhuma olimpiada.</p>
         )}
         {favoritos.map((o) => (
