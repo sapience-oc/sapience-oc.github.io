@@ -41,6 +41,32 @@
   min-height: 80px;
 }
 
+.field-password-wrap {
+  position: relative;
+  display: flex;
+}
+
+.field-password-wrap .field-input {
+  width: 100%;
+  padding-right: 44px;
+}
+
+.field-password-toggle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  color: var(--text-secondary);
+}
+
+.field-password-toggle:active {
+  color: var(--text-primary);
+}
+
 .btn-primary {
   width: 100%;
   background: var(--olive-500);

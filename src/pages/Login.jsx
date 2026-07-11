@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout';
-import { TextField, PrimaryButton } from '../components/FormControls';
+import { TextField, PasswordField, PrimaryButton } from '../components/FormControls';
 import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
@@ -47,9 +47,8 @@ export default function Login() {
           autoComplete="username"
           required
         />
-        <TextField
+        <PasswordField
           label="Senha"
-          type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="current-password"

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout';
 import BackHeader from '../components/BackHeader';
 import AvatarUpload from '../components/AvatarUpload';
-import { TextField, SelectField, PrimaryButton } from '../components/FormControls';
+import { TextField, PasswordField, SelectField, PrimaryButton } from '../components/FormControls';
 import { useAuth } from '../context/AuthContext';
 import { listSeriesEscolares } from '../api/usuario';
 import { listAreas } from '../api/olimpiadas';
@@ -137,16 +137,14 @@ export default function Register() {
           ))}
         </div>
 
-        <TextField
+        <PasswordField
           label="*Senha"
-          type="password"
           value={form.password}
           onChange={update('password')}
           required
         />
-        <TextField
+        <PasswordField
           label="*Confirme a senha"
-          type="password"
           value={form.confirmPassword}
           onChange={update('confirmPassword')}
           required

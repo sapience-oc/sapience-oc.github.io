@@ -24,8 +24,12 @@ function buildMonthGrid(year, monthIndex) {
   return cells;
 }
 
+function parseDataLocal(iso) {
+  return new Date(`${iso}T00:00:00`);
+}
+
 function formatarDataLonga(iso) {
-  const d = new Date(`${iso}T00:00:00`);
+  const d = parseDataLocal(iso);
   return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
 }
 
@@ -64,17 +68,17 @@ export default function CalendarPage() {
     () =>
       events
         .filter((e) => {
-          const d = new Date(e.data);
+          const d = parseDataLocal(e.data);
           return d.getFullYear() === year && d.getMonth() === monthIndex;
         })
-        .sort((a, b) => new Date(a.data) - new Date(b.data)),
+        .sort((a, b) => parseDataLocal(a.data) - parseDataLocal(b.data)),
     [events, year, monthIndex]
   );
 
   const eventosPorDia = useMemo(() => {
     const map = new Map();
     eventosDoMes.forEach((e) => {
-      const dia = new Date(e.data).getDate();
+      const dia = parseDataLocal(e.data).getDate();
       if (!map.has(dia)) map.set(dia, []);
       map.get(dia).push(e);
     });

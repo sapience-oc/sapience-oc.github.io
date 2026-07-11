@@ -9,6 +9,12 @@ import { useAuth } from '../context/AuthContext';
 import { listOlimpiadas, listAreas, toggleFavorito } from '../api/olimpiadas';
 import './Home.css';
 
+function primeiroNome(nomeCompleto) {
+  if (!nomeCompleto) return 'estudante';
+  const primeiro = nomeCompleto.trim().split(/\s+/)[0];
+  return primeiro || 'estudante';
+}
+
 export default function Home() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -63,7 +69,7 @@ export default function Home() {
         headerContent={
           <div>
             <Avatar src={user?.avatar} initials={user?.initials} size={34} />
-            <h1 className="home-greeting">Olá, estudante!</h1>
+            <h1 className="home-greeting">Olá, {primeiroNome(user?.nome)}!</h1>
             <p className="home-greeting-sub">Explore Olimpíadas</p>
           </div>
         }
