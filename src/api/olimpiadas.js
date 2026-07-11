@@ -2,6 +2,10 @@ import { USE_MOCK, request, mockDelay } from './client';
 import * as store from './mockData';
 import * as db from './db';
 import { storage } from '../utils/storage';
+import { comCache, invalidateCached } from '../utils/cache';
+
+const TTL_FAVORITOS_MS = 5 * 60 * 1000; // 5 minutos
+const TTL_CALENDARIO_MS = 5 * 60 * 1000;
 
 function currentUserId() {
   // Consistente com auth.getCurrentUser(): a fonte da verdade de "quem esta
@@ -43,7 +47,7 @@ export async function listFavoritos() {
     const lista = store.olimpiadas.filter((o) => ids.includes(o.id));
     return mockDelay(lista.map((o) => db.serializeOlimpiadaResumo(o, uid)));
   }
-  return request('/usuarios/me/favoritos');
+  return comCache('favoritos', TTL_FAVORITOS_MS, () => request('/usuarios/me/favoritos'));
 }
 
 export async function toggleFavorito(olimpiadaId) {
@@ -58,7 +62,12 @@ export async function toggleFavorito(olimpiadaId) {
     const olimpiada = db.findOlimpiada(olimpiadaId);
     return mockDelay(db.serializeOlimpiadaResumo(olimpiada, uid));
   }
-  return request(`/olimpiadas/${olimpiadaId}/favorito`, { method: 'POST' });
+  const data = await request(`/olimpiadas/${olimpiadaId}/favorito`, { method: 'POST' });
+  // favoritos mudaram -> invalida os dois caches que dependem disso, pra
+  // proxima leitura vir atualizada (o calendario e filtrado pelos favoritos).
+  invalidateCached('favoritos');
+  invalidateCached('calendario');
+  return data;
 }
 
 // -------------------------------------------------------------------------
@@ -108,7 +117,7 @@ export async function listCalendarEvents() {
 
     return mockDelay(eventos);
   }
-  return request('/usuarios/me/calendario'); // ja filtrado pelos favoritos no backend
+  return comCache('calendario', TTL_CALENDARIO_MS, () => request('/usuarios/me/calendario'));
 }
 
 // -------------------------------------------------------------------------

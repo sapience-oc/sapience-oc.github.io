@@ -2,6 +2,7 @@ import { USE_MOCK, request, mockDelay } from './client';
 import * as store from './mockData';
 import * as db from './db';
 import { storage } from '../utils/storage';
+import { clearAllCached } from '../utils/cache';
 
 function buildMockSession() {
   const usuario = store.usuarios.find((u) => u.id === store.MOCK_USER_ID);
@@ -18,6 +19,7 @@ export async function login({ identifier, password }) {
     }
     const fakeToken = 'mock-token-' + Date.now();
     const user = buildMockSession();
+    clearAllCached(); // evita misturar cache de uma sessao anterior com a nova
     storage.setToken(fakeToken);
     storage.setUser(user);
     return mockDelay({ token: fakeToken, user });
@@ -28,6 +30,7 @@ export async function login({ identifier, password }) {
     auth: false,
     body: { identifier, password },
   });
+  clearAllCached();
   storage.setToken(data.token);
   storage.setUser(data.user);
   return data;
@@ -40,6 +43,7 @@ export async function register(payload) {
   if (USE_MOCK) {
     const fakeToken = 'mock-token-' + Date.now();
     const user = { ...buildMockSession(), ...payload };
+    clearAllCached();
     storage.setToken(fakeToken);
     storage.setUser(user);
     return mockDelay({ token: fakeToken, user });
@@ -50,6 +54,7 @@ export async function register(payload) {
     auth: false,
     body: payload,
   });
+  clearAllCached();
   storage.setToken(data.token);
   storage.setUser(data.user);
   return data;
@@ -90,6 +95,7 @@ export async function getCurrentUser() {
   } catch (err) {
     storage.clearToken();
     storage.clearUser();
+    clearAllCached();
     return null;
   }
 }
@@ -97,4 +103,5 @@ export async function getCurrentUser() {
 export function logout() {
   storage.clearToken();
   storage.clearUser();
+  clearAllCached();
 }

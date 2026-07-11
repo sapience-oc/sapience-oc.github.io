@@ -2,6 +2,9 @@ import { USE_MOCK, request, mockDelay } from './client';
 import * as store from './mockData';
 import * as db from './db';
 import { storage } from '../utils/storage';
+import { comCache, setCached } from '../utils/cache';
+
+const TTL_PERFIL_MS = 5 * 60 * 1000; // 5 minutos
 
 function currentUserId() {
   // Consistente com auth.getCurrentUser(): a fonte da verdade de "quem esta
@@ -20,7 +23,7 @@ export async function getPerfil() {
     const user = getMockUser();
     return mockDelay(db.serializeUsuario(user));
   }
-  return request('/usuarios/me');
+  return comCache('perfil', TTL_PERFIL_MS, () => request('/usuarios/me'));
 }
 
 export async function updatePerfil(payload) {
@@ -34,6 +37,7 @@ export async function updatePerfil(payload) {
   }
   const data = await request('/usuarios/me', { method: 'PATCH', body: payload });
   storage.setUser(data);
+  setCached('perfil', data); // ja temos o dado fresco, atualiza o cache direto (sem invalidar+refetch)
   return data;
 }
 
