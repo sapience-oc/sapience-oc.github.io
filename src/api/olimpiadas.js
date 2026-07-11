@@ -13,7 +13,7 @@ function currentUserId() {
 // -------------------------------------------------------------------------
 export async function listAreas() {
   if (USE_MOCK) return mockDelay(store.areas);
-  // return request('/areas');
+  return request('/areas');
 }
 
 export async function listOlimpiadas({ areaId } = {}) {
@@ -23,7 +23,7 @@ export async function listOlimpiadas({ areaId } = {}) {
     if (areaId) lista = lista.filter((o) => o.areaIds.includes(areaId));
     return mockDelay(lista.map((o) => db.serializeOlimpiadaResumo(o, uid)));
   }
-  // return request(`/olimpiadas${areaId ? `?area_id=${areaId}` : ''}`);
+  return request(`/olimpiadas${areaId ? `?area_id=${areaId}` : ''}`);
 }
 
 export async function getOlimpiada(id) {
@@ -32,7 +32,7 @@ export async function getOlimpiada(id) {
     const found = db.findOlimpiada(id);
     return mockDelay(found ? db.serializeOlimpiadaCompleta(found, uid) : null);
   }
-  // return request(`/olimpiadas/${id}`);
+  return request(`/olimpiadas/${id}`);
 }
 
 export async function listFavoritos() {
@@ -43,7 +43,7 @@ export async function listFavoritos() {
     const lista = store.olimpiadas.filter((o) => ids.includes(o.id));
     return mockDelay(lista.map((o) => db.serializeOlimpiadaResumo(o, uid)));
   }
-  // return request('/usuarios/me/favoritos');
+  return request('/usuarios/me/favoritos');
 }
 
 export async function toggleFavorito(olimpiadaId) {
@@ -58,7 +58,7 @@ export async function toggleFavorito(olimpiadaId) {
     const olimpiada = db.findOlimpiada(olimpiadaId);
     return mockDelay(db.serializeOlimpiadaResumo(olimpiada, uid));
   }
-  // return request(`/olimpiadas/${olimpiadaId}/favorito`, { method: 'POST' });
+  return request(`/olimpiadas/${olimpiadaId}/favorito`, { method: 'POST' });
 }
 
 // -------------------------------------------------------------------------
@@ -70,7 +70,7 @@ export async function getEdicao(edicaoId) {
     const edicao = db.findEdicao(edicaoId);
     return mockDelay(db.serializeEdicaoCompleta(edicao, uid));
   }
-  // return request(`/edicoes/${edicaoId}`);
+  return request(`/edicoes/${edicaoId}`);
 }
 
 // -------------------------------------------------------------------------
@@ -108,7 +108,7 @@ export async function listCalendarEvents() {
 
     return mockDelay(eventos);
   }
-  // return request('/usuarios/me/calendario'); // ja filtrado pelos favoritos no backend
+  return request('/usuarios/me/calendario'); // ja filtrado pelos favoritos no backend
 }
 
 // -------------------------------------------------------------------------
@@ -119,7 +119,7 @@ export async function listPosts(forumId) {
     const lista = store.posts.filter((p) => p.forumId === forumId);
     return mockDelay(lista.map(db.serializePost));
   }
-  // return request(`/foruns/${forumId}/posts`);
+  return request(`/foruns/${forumId}/posts`);
 }
 
 export async function getPost(postId) {
@@ -135,7 +135,7 @@ export async function getPost(postId) {
       olimpiada: olimpiada ? { id: olimpiada.id, sigla: olimpiada.sigla, nome: olimpiada.nome } : null,
     });
   }
-  // return request(`/posts/${postId}`);
+  return request(`/posts/${postId}`);
 }
 
 export async function createPost(forumId, { titulo, conteudo }) {
@@ -152,7 +152,7 @@ export async function createPost(forumId, { titulo, conteudo }) {
     store.posts.push(novo);
     return mockDelay(db.serializePost(novo));
   }
-  // return request(`/foruns/${forumId}/posts`, { method: 'POST', body: { titulo, conteudo } });
+  return request(`/foruns/${forumId}/posts`, { method: 'POST', body: { titulo, conteudo } });
 }
 
 export async function listComentarios(postId) {
@@ -160,7 +160,7 @@ export async function listComentarios(postId) {
     const lista = store.comentarios.filter((c) => c.postId === postId);
     return mockDelay(lista.map(db.serializeComentario));
   }
-  // return request(`/posts/${postId}/comentarios`);
+  return request(`/posts/${postId}/comentarios`);
 }
 
 export async function createComentario(postId, conteudo) {
@@ -176,5 +176,5 @@ export async function createComentario(postId, conteudo) {
     store.comentarios.push(novo);
     return mockDelay(db.serializeComentario(novo));
   }
-  // return request(`/posts/${postId}/comentarios`, { method: 'POST', body: { conteudo } });
+  return request(`/posts/${postId}/comentarios`, { method: 'POST', body: { conteudo } });
 }

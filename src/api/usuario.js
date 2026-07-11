@@ -20,7 +20,7 @@ export async function getPerfil() {
     const user = getMockUser();
     return mockDelay(db.serializeUsuario(user));
   }
-  // return request('/usuarios/me');
+  return request('/usuarios/me');
 }
 
 export async function updatePerfil(payload) {
@@ -32,9 +32,9 @@ export async function updatePerfil(payload) {
     storage.setUser(serialized);
     return mockDelay(serialized);
   }
-  // const data = await request('/usuarios/me', { method: 'PATCH', body: payload });
-  // storage.setUser(data);
-  // return data;
+  const data = await request('/usuarios/me', { method: 'PATCH', body: payload });
+  storage.setUser(data);
+  return data;
 }
 
 // -------------------------------------------------------------------------
@@ -42,7 +42,7 @@ export async function updatePerfil(payload) {
 // -------------------------------------------------------------------------
 export async function listSeriesEscolares() {
   if (USE_MOCK) return mockDelay(store.seriesEscolares);
-  // return request('/series-escolares');
+  return request('/series-escolares');
 }
 
 // -------------------------------------------------------------------------
@@ -54,7 +54,7 @@ export async function listAcompanhamentos() {
     const lista = store.acompanhamentos.filter((a) => a.usuarioId === uid);
     return mockDelay(lista.map(db.serializeAcompanhamento));
   }
-  // return request('/usuarios/me/acompanhamentos');
+  return request('/usuarios/me/acompanhamentos');
 }
 
 export async function listPremiacoes() {
@@ -63,7 +63,7 @@ export async function listPremiacoes() {
     const lista = store.acompanhamentos.filter((a) => a.usuarioId === uid && a.premiacao);
     return mockDelay(lista.map(db.serializeAcompanhamento));
   }
-  // return request('/usuarios/me/acompanhamentos?somente_premiados=true');
+  return request('/usuarios/me/acompanhamentos?somente_premiados=true');
 }
 
 // Cria ou atualiza (upsert) o acompanhamento do usuario para uma edicao.
@@ -91,7 +91,7 @@ export async function salvarAcompanhamento({ edicaoId, premiacao, inscrito, obse
     }
     return mockDelay(db.serializeAcompanhamento(existente));
   }
-  // return request('/acompanhamentos', { method: 'POST', body: { edicaoId, premiacao, inscrito, observacoes } });
+  return request('/acompanhamentos', { method: 'POST', body: { edicaoId, premiacao, inscrito, observacoes } });
 }
 
 export async function removerPremiacao(acompanhamentoId) {
@@ -100,5 +100,5 @@ export async function removerPremiacao(acompanhamentoId) {
     if (item) item.premiacao = null;
     return mockDelay({ ok: true });
   }
-  // return request(`/acompanhamentos/${acompanhamentoId}`, { method: 'PATCH', body: { premiacao: null } });
+  return request(`/acompanhamentos/${acompanhamentoId}`, { method: 'PATCH', body: { premiacao: null } });
 }

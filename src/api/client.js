@@ -19,11 +19,6 @@ class ApiError extends Error {
 }
 
 export async function request(path, { method = 'GET', body, headers = {}, auth = true } = {}) {
-  throw new Error(
-    'API real ainda nao configurada. Defina USE_MOCK=false e implemente request() em src/api/client.js'
-  );
-
-  /*
   const token = storage.getToken();
 
   const res = await fetch(`${API_BASE_URL}${path}`, {
@@ -48,7 +43,7 @@ export async function request(path, { method = 'GET', body, headers = {}, auth =
   }
 
   return data;
-  */
+
 }
 
 export { ApiError };

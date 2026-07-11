@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Camera, Trash2 } from 'lucide-react';
 import Avatar from './Avatar';
 import { readAndResizeImage } from '../utils/image';
-import { onNativeAvatar } from '../utils/nativeBridge';
+import { onNativeAvatar, requestNativeGalleryPick } from '../utils/nativeBridge';
 import './AvatarUpload.css';
 
 export default function AvatarUpload({ value, initials, onChange }) {
@@ -10,6 +10,11 @@ export default function AvatarUpload({ value, initials, onChange }) {
   const [error, setError] = useState('');
 
   useEffect(() => onNativeAvatar((dataUrl) => onChange(dataUrl)), [onChange]);
+
+  function handlePickClick() {
+    requestNativeGalleryPick();
+    fileInputRef.current?.click();
+  }
 
   async function handleFileChange(e) {
     const file = e.target.files?.[0];
@@ -31,7 +36,7 @@ export default function AvatarUpload({ value, initials, onChange }) {
         <button
           type="button"
           className="avatar-editor-camera"
-          onClick={() => fileInputRef.current?.click()}
+          onClick={handlePickClick}
           aria-label="Trocar foto de perfil"
         >
           <Camera size={15} />
@@ -45,7 +50,7 @@ export default function AvatarUpload({ value, initials, onChange }) {
         onChange={handleFileChange}
       />
       <div className="avatar-editor-actions">
-        <button type="button" className="avatar-editor-link" onClick={() => fileInputRef.current?.click()}>
+        <button type="button" className="avatar-editor-link" onClick={handlePickClick}>
           {value ? 'Trocar foto' : 'Adicionar foto'}
         </button>
         {value && (

@@ -68,6 +68,7 @@ export default function Register() {
       await register({
         nome: form.nome,
         email: form.email,
+        password: form.password,
         serieEscolarId: form.serieEscolarId,
         inep: form.inep,
         areaIds: form.areaIds,
