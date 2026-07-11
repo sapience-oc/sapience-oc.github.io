@@ -1,6 +1,3 @@
-import * as db from './mockData';
-
-
 export function findArea(id) {
   return db.areas.find((a) => a.id === id) || null;
 }

@@ -51,7 +51,7 @@ export default function Profile() {
             <span className="settings-row-icon">
               <Pencil size={17} />
             </span>
-            <span className="settings-row-label">Editar informacoes</span>
+            <span className="settings-row-label">Editar informações</span>
             <ChevronRight size={17} color="var(--text-secondary)" />
           </button>
 
@@ -67,7 +67,7 @@ export default function Profile() {
             <span className="settings-row-icon">
               <Trophy size={17} />
             </span>
-            <span className="settings-row-label">Premiacoes</span>
+            <span className="settings-row-label">Premiações</span>
             <span className="settings-row-chip">{totalPremios}</span>
             <ChevronRight size={17} color="var(--text-secondary)" />
           </button>

@@ -151,8 +151,8 @@ export default function Awards() {
     listPremiacoes()
       .then((data) => setPremiacoes(data))
       .catch((err) => {
-        console.error('Erro ao carregar premiacoes:', err);
-        setErro('Nao foi possivel carregar suas premiacoes agora.');
+        console.error('Erro ao carregar premiações:', err);
+        setErro('Nao foi possivel carregar suas premiações agora.');
       })
       .finally(() => setLoading(false));
   }
@@ -173,7 +173,7 @@ export default function Awards() {
       headerContent={
         <div>
           <BackHeader onBack={() => navigate(-1)} />
-          <h1 className="awards-title">Premiacoes</h1>
+          <h1 className="awards-title">Premiações</h1>
         </div>
       }
     >

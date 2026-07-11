@@ -22,7 +22,7 @@ export default function Home() {
   useEffect(() => {
     listAreas()
       .then((data) => setAreas(data))
-      .catch((err) => console.error('Erro ao carregar areas:', err));
+      .catch((err) => console.error('Erro ao carregar áreas:', err));
   }, []);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export default function Home() {
       })
       .catch((err) => {
         console.error('Erro ao carregar olimpiadas:', err);
-        if (ativo) setErro('Nao foi possivel carregar as olimpiadas agora. Tente novamente.');
+        if (ativo) setErro('Não foi possível carregar as olimpíadas agora. Tente novamente.');
       })
       .finally(() => {
         if (ativo) setLoading(false);
@@ -63,15 +63,15 @@ export default function Home() {
         headerContent={
           <div>
             <Avatar src={user?.avatar} initials={user?.initials} size={34} />
-            <h1 className="home-greeting">Ola, estudante!</h1>
-            <p className="home-greeting-sub">Explore Olimpiadas</p>
+            <h1 className="home-greeting">Olá, estudante!</h1>
+            <p className="home-greeting-sub">Explore Olimpíadas</p>
           </div>
         }
       >
         <div className="overlap-card home-search">
           <Search size={16} color="var(--text-secondary)" />
           <input
-            placeholder="Buscar por area ou olimpiada"
+            placeholder="Buscar por área ou olimpíada"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -103,7 +103,7 @@ export default function Home() {
               style={{ background: `linear-gradient(135deg, ${destaque.corDestaque}, #223018)` }}
               onClick={() => navigate(`/olimpiada/${destaque.id}`)}
             >
-              <span className="featured-badge">Inscricoes abertas</span>
+              <span className="featured-badge">Inscrições abertas</span>
               <div className="featured-name">{destaque.sigla} {destaque.edicaoAtual?.ano}</div>
               <div className="featured-desc">{destaque.nome}</div>
               {destaque.proximoPrazo && (
@@ -116,11 +116,11 @@ export default function Home() {
           </>
         )}
 
-        <h2 className="section-title">Proximos prazos</h2>
+        <h2 className="section-title">Próximos prazos</h2>
         {loading && <p className="muted-text">Carregando...</p>}
         {!loading && erro && <p className="muted-text">{erro}</p>}
         {!loading && !erro && lista.length === 0 && (
-          <p className="muted-text">Nenhuma olimpiada encontrada para esse filtro.</p>
+          <p className="muted-text">Nenhuma olimpíada encontrada para esse filtro.</p>
         )}
         {lista.map((o) => (
           <OlympiadCard key={o.id} olimpiada={o} onToggleFavorito={handleToggleFavorito} />

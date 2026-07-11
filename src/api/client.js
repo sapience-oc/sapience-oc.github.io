@@ -2,14 +2,6 @@ import { storage } from '../utils/storage';
 
 export const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://api.sapience.example.com';
 
-export const USE_MOCK = (import.meta.env.VITE_USE_MOCK ?? 'true') !== 'false';
-
-export const MOCK_DELAY_MS = 280;
-
-export function mockDelay(value, ms = MOCK_DELAY_MS) {
-  return new Promise((resolve) => setTimeout(() => resolve(value), ms));
-}
-
 class ApiError extends Error {
   constructor(message, status, data) {
     super(message);

@@ -21,7 +21,6 @@ export default function Login() {
     setError('');
     setLoading(true);
     try {
-      // Modo mock: qualquer usuario/senha preenchidos funcionam.
       await login(identifier, password);
       navigate('/home', { replace: true });
     } catch (err) {
@@ -34,7 +33,7 @@ export default function Login() {
   return (
     <AuthLayout>
       <h1 className="auth-title">Login</h1>
-      <p className="auth-subtitle">Faca login para continuar.</p>
+      <p className="auth-subtitle">Faça login para continuar.</p>
 
       {successMessage && <div className="auth-banner">{successMessage}</div>}
       {error && <div className="auth-banner error">{error}</div>}

@@ -76,10 +76,10 @@ export default function Register() {
       });
       navigate('/login', {
         replace: true,
-        state: { message: 'Cadastro realizado! Faca login para continuar.' },
+        state: { message: 'Cadastro realizado! Faça login para continuar.' },
       });
     } catch (err) {
-      setError(err.message || 'Nao foi possivel concluir o cadastro.');
+      setError(err.message || 'Não foi possível concluir o cadastro.');
     } finally {
       setLoading(false);
     }
@@ -101,7 +101,7 @@ export default function Register() {
       <form onSubmit={handleSubmit}>
         <TextField label="*E-mail" type="email" value={form.email} onChange={update('email')} required />
         <TextField label="*Nome" type="text" value={form.nome} onChange={update('nome')} required />
-        <SelectField label="*Serie escolar" value={form.serieEscolarId} onChange={update('serieEscolarId')} required>
+        <SelectField label="*Série escolar" value={form.serieEscolarId} onChange={update('serieEscolarId')} required>
           <option value="" disabled>
             Selecione
           </option>
@@ -122,7 +122,7 @@ export default function Register() {
         />
 
         <span className="field-label" style={{ display: 'block', marginBottom: 8 }}>
-          *Areas de interesse
+          *Áreas de interesse
         </span>
         <div className="area-chip-grid">
           {areas.map((a) => (

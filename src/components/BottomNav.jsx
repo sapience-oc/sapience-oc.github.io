@@ -5,7 +5,7 @@ import './BottomNav.css';
 const items = [
   { to: '/home', label: 'Home', icon: Home },
   { to: '/favoritos', label: 'Favoritos', icon: Heart },
-  { to: '/calendario', label: 'Calendario', icon: Calendar },
+  { to: '/calendario', label: 'Calendário', icon: Calendar },
   { to: '/perfil', label: 'Perfil', icon: User },
 ];
 

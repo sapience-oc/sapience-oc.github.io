@@ -47,8 +47,8 @@ export default function CalendarPage() {
         if (ativo) setEvents(data);
       })
       .catch((err) => {
-        console.error('Erro ao carregar calendario:', err);
-        if (ativo) setErro('Nao foi possivel carregar o calendario agora.');
+        console.error('Erro ao carregar calendário:', err);
+        if (ativo) setErro('Nao foi possivel carregar o calendário agora.');
       })
       .finally(() => {
         if (ativo) setLoading(false);
@@ -104,7 +104,7 @@ export default function CalendarPage() {
         minHeight={78}
         headerContent={
           <div>
-            <p className="cal-eyebrow">Calendario</p>
+            <p className="cal-eyebrow">Calendário</p>
             <h1 className="cal-title">de olimpiadas</h1>
           </div>
         }
@@ -145,13 +145,13 @@ export default function CalendarPage() {
           </div>
         </div>
 
-        <p className="cal-hint">Mostrando prazos das suas olimpiadas favoritas. Toque em um dia marcado pra ver os detalhes.</p>
+        <p className="cal-hint">Mostrando prazos das suas olimpíadas favoritas. Toque em um dia marcado pra ver os detalhes.</p>
 
         <div className="cal-events">
           {loading && <p className="muted-text">Carregando...</p>}
           {!loading && erro && <p className="muted-text">{erro}</p>}
           {!loading && !erro && eventosDoMes.length === 0 && (
-            <p className="muted-text">Nenhum prazo nesse mes para suas olimpiadas favoritas.</p>
+            <p className="muted-text">Nenhum prazo nesse mês para suas olimpíadas favoritas.</p>
           )}
           {eventosDoMes.map((e) => (
             <button key={e.id} className="cal-event" onClick={() => navigate(`/olimpiada/${e.olimpiadaId}`)}>

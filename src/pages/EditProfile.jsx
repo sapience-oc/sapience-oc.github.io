@@ -70,7 +70,7 @@ export default function EditProfile() {
       headerContent={
         <div>
           <BackHeader onBack={() => navigate(-1)} />
-          <h1 className="edit-title">Editar informacoes</h1>
+          <h1 className="edit-title">Editar informações</h1>
         </div>
       }
     >
@@ -92,7 +92,7 @@ export default function EditProfile() {
           value={form.inep}
           onChange={(e) => setForm((prev) => ({ ...prev, inep: apenasNumeros(e.target.value) }))}
         />
-        <SelectField label="Serie escolar" value={form.serieEscolarId} onChange={update('serieEscolarId')}>
+        <SelectField label="Série escolar" value={form.serieEscolarId} onChange={update('serieEscolarId')}>
           <option value="" disabled>
             Selecione
           </option>
@@ -104,7 +104,7 @@ export default function EditProfile() {
         </SelectField>
 
         <span className="field-label" style={{ display: 'block', marginBottom: 8 }}>
-          Areas de interesse
+          Áreas de interesse
         </span>
         <div className="area-chip-grid">
           {areas.map((a) => (

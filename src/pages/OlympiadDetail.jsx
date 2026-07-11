@@ -242,14 +242,14 @@ export default function OlympiadDetail() {
               className="regulamento-link"
               onClick={() => openExternal(edicao.regulamento)}
             >
-              Ver regulamento / edital desta edicao
+              Ver regulamento / edital desta edição
             </button>
           )}
 
           {edicao.forum && (
             <>
               <div className="section-title-row">
-                <h2 className="section-title">Duvidas e comentarios</h2>
+                <h2 className="section-title">Dúvidas e comentários</h2>
                 {!showNewTopic && (
                   <button className="new-topic-btn" onClick={() => setShowNewTopic(true)}>
                     <Plus size={14} />
@@ -282,7 +282,7 @@ export default function OlympiadDetail() {
                   </button>
                 ))}
                 {posts.length === 0 && !showNewTopic && (
-                  <p className="muted-text">Nenhuma duvida por aqui ainda nessa edicao. Seja o primeiro a perguntar!</p>
+                  <p className="muted-text">Nenhuma dúvida por aqui ainda nessa edição. Seja o primeiro a perguntar!</p>
                 )}
               </div>
             </>
@@ -292,7 +292,7 @@ export default function OlympiadDetail() {
 
       <button className={`fav-btn ${olimpiada.favoritado ? 'active' : ''}`} onClick={handleToggleFavorito}>
         <Star size={16} fill={olimpiada.favoritado ? 'currentColor' : 'none'} />
-        {olimpiada.favoritado ? 'Olimpiada favoritada' : 'Favoritar esta olimpiada'}
+        {olimpiada.favoritado ? 'Olimpíada favoritada' : 'Favoritar esta olimpíada'}
       </button>
     </GradientSheet>
   );

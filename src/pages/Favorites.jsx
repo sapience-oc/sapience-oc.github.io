@@ -25,7 +25,7 @@ export default function Favorites() {
       .catch((err) => {
         if (!ativo) return;
         console.error('Erro ao carregar favoritos:', err);
-        setErro('Nao foi possivel carregar seus favoritos agora. Tente novamente.');
+        setErro('Não foi possivel carregar seus favoritos agora. Tente novamente.');
       })
       .finally(() => {
         if (ativo) setLoading(false);
@@ -55,19 +55,19 @@ export default function Favorites() {
         headerContent={
           <div>
             <span className="fav-star">&#9733;</span>
-            <h1 className="fav-title">Olimpiadas</h1>
+            <h1 className="fav-title">Olimpíadas</h1>
             <h1 className="fav-title strong">Favoritas</h1>
           </div>
         }
       >
         <button className="overlap-card fav-calendar-btn" onClick={() => navigate('/calendario')}>
-          Ver calendario
+          Ver calendário
         </button>
 
         {loading && <p className="muted-text">Carregando...</p>}
         {!loading && erro && <p className="muted-text">{erro}</p>}
         {!loading && !erro && favoritos.length === 0 && (
-          <p className="muted-text">Voce ainda nao favoritou nenhuma olimpiada.</p>
+          <p className="muted-text">Você ainda não favoritou nenhuma olimpíada.</p>
         )}
         {favoritos.map((o) => (
           <OlympiadCard key={o.id} olimpiada={o} onToggleFavorito={handleToggleFavorito} />
