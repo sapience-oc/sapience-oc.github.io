@@ -41,7 +41,7 @@ export default function Login() {
 
       <form onSubmit={handleSubmit}>
         <TextField
-          label="Nome ou e-mail"
+          label="e-mail"
           type="text"
           value={identifier}
           onChange={(e) => setIdentifier(e.target.value)}
