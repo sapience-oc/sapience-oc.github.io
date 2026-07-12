@@ -7,6 +7,7 @@ import OlympiadCard from '../components/OlympiadCard';
 import Avatar from '../components/Avatar';
 import { useAuth } from '../context/AuthContext';
 import { listOlimpiadas, listAreas, toggleFavorito } from '../api/olimpiadas';
+import { prazoAtivo } from '../utils/prazo';
 import './Home.css';
 
 function primeiroNome(nomeCompleto) {
@@ -82,8 +83,8 @@ export default function Home() {
       .filter((o) => o.id !== destaque?.id)
       .slice()
       .sort((a, b) => {
-        const diasA = a.proximoPrazo?.diasRestantes ?? Infinity;
-        const diasB = b.proximoPrazo?.diasRestantes ?? Infinity;
+        const diasA = prazoAtivo(a.proximoPrazo)?.diasRestantes ?? Infinity;
+        const diasB = prazoAtivo(b.proximoPrazo)?.diasRestantes ?? Infinity;
         return diasA - diasB;
       });
   }, [olimpiadas, destaque]);
@@ -187,9 +188,9 @@ export default function Home() {
                   <span className="featured-badge">Inscrições abertas</span>
                   <div className="featured-name">{destaque.sigla} {destaque.edicaoAtual?.ano}</div>
                   <div className="featured-desc">{destaque.nome}</div>
-                  {destaque.proximoPrazo && (
+                  {prazoAtivo(destaque.proximoPrazo) && (
                     <div className="featured-footer">
-                      <span>Encerra em {Math.max(destaque.proximoPrazo.diasRestantes, 0)} dias!</span>
+                      <span>Encerra em {prazoAtivo(destaque.proximoPrazo).diasRestantes} dias!</span>
                       <span className="featured-link">Ver edital</span>
                     </div>
                   )}

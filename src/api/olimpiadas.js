@@ -1,10 +1,11 @@
 import { request } from './client';
 import * as db from './db';
 import { storage } from '../utils/storage';
-import { comCache, invalidateCached } from '../utils/cache';
+import { comCache, invalidateCached, invalidateByPrefix } from '../utils/cache';
 
 const TTL_FAVORITOS_MS = 30 * 60 * 1000;
 const TTL_CALENDARIO_MS = 30 * 60 * 1000;
+const TTL_OLIMPIADAS_MS = 5 * 60 * 1000;
 
 function currentUserId() {
   return storage.getToken();
@@ -15,7 +16,10 @@ export async function listAreas() {
 }
 
 export async function listOlimpiadas({ areaId } = {}) {
-  return request(`/olimpiadas${areaId ? `?area_id=${areaId}` : ''}`);
+  const chave = `olimpiadas:${areaId || 'todas'}`;
+  return comCache(chave, TTL_OLIMPIADAS_MS, () =>
+    request(`/olimpiadas${areaId ? `?area_id=${areaId}` : ''}`)
+  );
 }
 
 export async function getOlimpiada(id) {
@@ -30,6 +34,7 @@ export async function toggleFavorito(olimpiadaId) {
   const data = await request(`/olimpiadas/${olimpiadaId}/favorito`, { method: 'POST' });
   invalidateCached('favoritos');
   invalidateCached('calendario');
+  invalidateByPrefix('olimpiadas:');
   return data;
 }
 

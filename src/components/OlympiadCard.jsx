@@ -1,5 +1,6 @@
 import { Heart, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { prazoAtivo } from '../utils/prazo';
 import './OlympiadCard.css';
 
 function urgencyColor(dias) {
@@ -19,8 +20,9 @@ const STATUS_LABEL = {
 export default function OlympiadCard({ olimpiada, onToggleFavorito }) {
   const navigate = useNavigate();
   const areaPrincipal = olimpiada.areas?.[0]?.nome;
-  const stage = olimpiada.proximoPrazo
-    ? olimpiada.proximoPrazo.nome
+  const prazo = prazoAtivo(olimpiada.proximoPrazo);
+  const stage = prazo
+    ? prazo.nome
     : olimpiada.edicaoAtual
     ? STATUS_LABEL[olimpiada.edicaoAtual.status]
     : 'Sem edicao ativa';
@@ -44,10 +46,10 @@ export default function OlympiadCard({ olimpiada, onToggleFavorito }) {
       </div>
 
       <div className="oly-card-side">
-        {olimpiada.proximoPrazo?.diasRestantes != null && (
-          <div className="oly-card-days" style={{ color: urgencyColor(olimpiada.proximoPrazo.diasRestantes) }}>
+        {prazo?.diasRestantes != null && (
+          <div className="oly-card-days" style={{ color: urgencyColor(prazo.diasRestantes) }}>
             <Clock size={12} />
-            {Math.max(olimpiada.proximoPrazo.diasRestantes, 0)} dias
+            {prazo.diasRestantes} dias
           </div>
         )}
         <span

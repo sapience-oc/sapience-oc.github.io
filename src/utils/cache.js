@@ -1,22 +1,3 @@
-/**
- * Cache simples no localStorage, com expiracao (TTL) por chave.
- *
- * Existe pra reduzir chamadas desnecessarias na API (que roda em hospedagem
- * gratuita, entao cada requisicao "a toa" custa latencia real pro usuario).
- *
- * Estrategia "stale-while-revalidate":
- *  - cache fresco (dentro do TTL)  -> devolve na hora, ZERO requisicao.
- *  - cache velho (passou do TTL)   -> devolve o que tem na hora (a tela nao
- *    fica esperando), e dispara uma atualizacao em segundo plano pra proxima
- *    vez que a tela for aberta ja vir com o dado novo.
- *  - sem cache nenhum              -> busca normalmente e guarda.
- *
- * Isso significa que, quando o cache esta "velho", a tela atual ainda mostra
- * o valor antigo (nao fica reativa a atualizacao em segundo plano). Se um dia
- * quiser isso reativo, da pra evoluir emitindo um evento quando o refresh
- * terminar e os componentes assinarem esse evento.
- */
-
 const PREFIX = 'sapience_cache:';
 
 export function getCached(chave, maxAgeMs) {
@@ -35,7 +16,7 @@ export function setCached(chave, valor) {
   try {
     localStorage.setItem(PREFIX + chave, JSON.stringify({ valor, timestamp: Date.now() }));
   } catch {
-    // localStorage cheio/indisponivel (ex: modo privado) - ignora, so nao cacheia.
+    // none
   }
 }
 
@@ -43,7 +24,18 @@ export function invalidateCached(chave) {
   try {
     localStorage.removeItem(PREFIX + chave);
   } catch {
-    /* noop */
+    // none
+  }
+}
+
+export function invalidateByPrefix(prefixoChave) {
+  try {
+    const alvo = PREFIX + prefixoChave;
+    Object.keys(localStorage)
+      .filter((k) => k.startsWith(alvo))
+      .forEach((k) => localStorage.removeItem(k));
+  } catch {
+    // none
   }
 }
 
@@ -53,14 +45,10 @@ export function clearAllCached() {
       .filter((k) => k.startsWith(PREFIX))
       .forEach((k) => localStorage.removeItem(k));
   } catch {
-    /* noop */
+    // none
   }
 }
 
-/**
- * Envolve uma funcao assincrona de busca (ex: () => request('/usuarios/me'))
- * com a estrategia de cache acima.
- */
 export async function comCache(chave, maxAgeMs, buscar) {
   const cache = getCached(chave, maxAgeMs);
 
@@ -69,11 +57,10 @@ export async function comCache(chave, maxAgeMs, buscar) {
   }
 
   if (cache && cache.expirado) {
-    // devolve o velho na hora, atualiza em segundo plano pra proxima visita
     buscar()
       .then((novo) => setCached(chave, novo))
       .catch(() => {
-        /* falhou a atualizacao em segundo plano - mantem o cache antigo, sem erro visivel */
+        // none
       });
     return cache.valor;
   }
