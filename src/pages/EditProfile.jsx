@@ -23,7 +23,7 @@ export default function EditProfile() {
     email: user?.email || '',
     inep: user?.inep || '',
     serieEscolarId: user?.serieEscolar?.id || '',
-    areaIds: user?.areaIds || [],
+    areaIds: (user?.areas || []).map((a) => a.id),
     avatar: user?.avatar || null,
   });
   const [saving, setSaving] = useState(false);

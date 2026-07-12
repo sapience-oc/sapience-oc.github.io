@@ -38,6 +38,27 @@
   color: var(--text-primary);
 }
 
+.home-search-icon-btn,
+.home-search-clear-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.home-search-clear-btn {
+  opacity: 0.7;
+}
+.home-search-clear-btn:active {
+  opacity: 1;
+}
+
+.home-search-feedback {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  margin: 10px 2px 18px;
+}
+
 .home-filters {
   display: flex;
   gap: 8px;

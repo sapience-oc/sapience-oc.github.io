@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import GradientSheet from '../components/GradientSheet';
 import BottomNav from '../components/BottomNav';
 import OlympiadCard from '../components/OlympiadCard';
@@ -22,6 +22,7 @@ export default function Home() {
   const [activeAreaId, setActiveAreaId] = useState(null);
   const [olimpiadas, setOlimpiadas] = useState([]);
   const [query, setQuery] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState(null);
 
@@ -56,10 +57,44 @@ export default function Home() {
     setOlimpiadas((prev) => prev.map((o) => (o.id === id ? updated : o)));
   }
 
+  function handleSearch() {
+    setSearchTerm(query.trim());
+  }
+
+  function handleClear() {
+    setQuery('');
+    setSearchTerm('');
+  }
+
+  function handleSearchKeyDown(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSearch();
+    }
+  }
+
+  const emBusca = searchTerm.length > 0;
+
   const destaque = olimpiadas.find((o) => o.edicaoAtual?.status === 'inscricoes_abertas');
-  const lista = olimpiadas
-    .filter((o) => o.id !== destaque?.id)
-    .filter((o) => o.nome.toLowerCase().includes(query.toLowerCase()) || o.sigla.toLowerCase().includes(query.toLowerCase()));
+
+  const proximosPrazos = useMemo(() => {
+    return olimpiadas
+      .filter((o) => o.id !== destaque?.id)
+      .slice()
+      .sort((a, b) => {
+        const diasA = a.proximoPrazo?.diasRestantes ?? Infinity;
+        const diasB = b.proximoPrazo?.diasRestantes ?? Infinity;
+        return diasA - diasB;
+      });
+  }, [olimpiadas, destaque]);
+
+  const resultadosBusca = useMemo(() => {
+    if (!searchTerm) return [];
+    const termo = searchTerm.toLowerCase();
+    return olimpiadas.filter(
+      (o) => o.nome.toLowerCase().includes(termo) || o.sigla.toLowerCase().includes(termo)
+    );
+  }, [olimpiadas, searchTerm]);
 
   return (
     <>
@@ -75,13 +110,39 @@ export default function Home() {
         }
       >
         <div className="overlap-card home-search">
-          <Search size={16} color="var(--text-secondary)" />
+          <button
+            type="button"
+            className="home-search-icon-btn"
+            onClick={handleSearch}
+            aria-label="Pesquisar"
+          >
+            <Search size={16} color="var(--text-secondary)" />
+          </button>
           <input
             placeholder="Buscar por área ou olimpíada"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={handleSearchKeyDown}
           />
+          {query && (
+            <button
+              type="button"
+              className="home-search-clear-btn"
+              onClick={handleClear}
+              aria-label="Limpar busca"
+            >
+              <X size={16} color="var(--text-secondary)" />
+            </button>
+          )}
         </div>
+
+        {emBusca && (
+          <p className="home-search-feedback">
+            {resultadosBusca.length > 0
+              ? `Mostrando resultados para "${searchTerm}"`
+              : 'Nenhum resultado encontrado.'}
+          </p>
+        )}
 
         <div className="home-filters">
           <button
@@ -101,36 +162,50 @@ export default function Home() {
           ))}
         </div>
 
-        {destaque && (
+        {loading && <p className="muted-text">Carregando...</p>}
+        {!loading && erro && <p className="muted-text">{erro}</p>}
+
+        {!loading && !erro && emBusca && resultadosBusca.length > 0 && (
           <>
-            <h2 className="section-title">Em destaque</h2>
-            <button
-              className="featured-card"
-              style={{ background: `linear-gradient(135deg, ${destaque.corDestaque}, #223018)` }}
-              onClick={() => navigate(`/olimpiada/${destaque.id}`)}
-            >
-              <span className="featured-badge">Inscrições abertas</span>
-              <div className="featured-name">{destaque.sigla} {destaque.edicaoAtual?.ano}</div>
-              <div className="featured-desc">{destaque.nome}</div>
-              {destaque.proximoPrazo && (
-                <div className="featured-footer">
-                  <span>Encerra em {Math.max(destaque.proximoPrazo.diasRestantes, 0)} dias!</span>
-                  <span className="featured-link">Ver edital</span>
-                </div>
-              )}
-            </button>
+            <h2 className="section-title">Resultados</h2>
+            {resultadosBusca.map((o) => (
+              <OlympiadCard key={o.id} olimpiada={o} onToggleFavorito={handleToggleFavorito} />
+            ))}
           </>
         )}
 
-        <h2 className="section-title">Próximos prazos</h2>
-        {loading && <p className="muted-text">Carregando...</p>}
-        {!loading && erro && <p className="muted-text">{erro}</p>}
-        {!loading && !erro && lista.length === 0 && (
-          <p className="muted-text">Nenhuma olimpíada encontrada para esse filtro.</p>
+        {!loading && !erro && !emBusca && (
+          <>
+            {destaque && (
+              <>
+                <h2 className="section-title">Em destaque</h2>
+                <button
+                  className="featured-card"
+                  style={{ background: `linear-gradient(135deg, ${destaque.corDestaque}, #223018)` }}
+                  onClick={() => navigate(`/olimpiada/${destaque.id}`)}
+                >
+                  <span className="featured-badge">Inscrições abertas</span>
+                  <div className="featured-name">{destaque.sigla} {destaque.edicaoAtual?.ano}</div>
+                  <div className="featured-desc">{destaque.nome}</div>
+                  {destaque.proximoPrazo && (
+                    <div className="featured-footer">
+                      <span>Encerra em {Math.max(destaque.proximoPrazo.diasRestantes, 0)} dias!</span>
+                      <span className="featured-link">Ver edital</span>
+                    </div>
+                  )}
+                </button>
+              </>
+            )}
+
+            <h2 className="section-title">Próximos prazos</h2>
+            {proximosPrazos.length === 0 && (
+              <p className="muted-text">Nenhuma olimpíada encontrada para esse filtro.</p>
+            )}
+            {proximosPrazos.map((o) => (
+              <OlympiadCard key={o.id} olimpiada={o} onToggleFavorito={handleToggleFavorito} />
+            ))}
+          </>
         )}
-        {lista.map((o) => (
-          <OlympiadCard key={o.id} olimpiada={o} onToggleFavorito={handleToggleFavorito} />
-        ))}
       </GradientSheet>
       <BottomNav />
     </>
