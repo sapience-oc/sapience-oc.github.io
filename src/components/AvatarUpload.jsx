@@ -12,8 +12,11 @@ export default function AvatarUpload({ value, initials, onChange }) {
   useEffect(() => onNativeAvatar((dataUrl) => onChange(dataUrl)), [onChange]);
 
   function handlePickClick() {
-    requestNativeGalleryPick();
-    fileInputRef.current?.click();
+    const isNative = requestNativeGalleryPick();
+    
+    if (!isNative) {
+      fileInputRef.current?.click();
+    }
   }
 
   async function handleFileChange(e) {
