@@ -12,6 +12,17 @@ export async function getPerfil() {
   return comCache('perfil', TTL_PERFIL_MS, () => request('/usuarios/me'));
 }
 
+export async function uploadAvatarBase64(base64Image) {
+  const cleanBase64 = base64Image.includes(',') 
+    ? base64Image.split(',')[1] 
+    : base64Image;
+    
+  return request('/usuarios/me/avatar/base64', {
+    method: 'POST',
+    body: { base64_image: cleanBase64 }
+  });
+}
+
 export async function updatePerfil(payload) {
   const data = await request('/usuarios/me', { method: 'PATCH', body: payload });
   storage.setUser(data);
@@ -44,22 +55,4 @@ export async function alterarSenha({ senhaAtual, novaSenha }) {
     method: 'POST',
     body: { senhaAtual, novaSenha },
   });
-}
-
-export async function uploadAvatarBase64(base64Image) {
-  const cleanBase64 = base64Image.includes(',') 
-    ? base64Image.split(',')[1] 
-    : base64Image;
-    
-  return request('/usuarios/me/avatar/base64', {
-    method: 'POST',
-    body: { base64_image: cleanBase64 }
-  });
-}
-
-export async function updatePerfil(payload) {
-  const data = await request('/usuarios/me', { method: 'PATCH', body: payload });
-  storage.setUser(data);
-  setCached('perfil', data);
-  return data;
 }
