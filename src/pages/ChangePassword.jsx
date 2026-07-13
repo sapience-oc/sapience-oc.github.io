@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GradientSheet from '../components/GradientSheet';
 import BackHeader from '../components/BackHeader';
-import { TextField, PrimaryButton } from '../components/FormControls';
+import { PasswordField, PrimaryButton } from '../components/FormControls';
 import { alterarSenha } from '../api/usuario';
 import './ChangePassword.css';
 
@@ -58,25 +58,22 @@ export default function ChangePassword() {
       {saved && <div className="auth-banner">Senha alterada com sucesso!</div>}
 
       <form onSubmit={handleSubmit}>
-        <TextField
+        <PasswordField
           label="Senha atual"
-          type="password"
           autoComplete="current-password"
           value={senhaAtual}
           onChange={(e) => setSenhaAtual(e.target.value)}
           required
         />
-        <TextField
+        <PasswordField
           label="Nova senha"
-          type="password"
           autoComplete="new-password"
           value={novaSenha}
           onChange={(e) => setNovaSenha(e.target.value)}
           required
         />
-        <TextField
+        <PasswordField
           label="Confirme a nova senha"
-          type="password"
           autoComplete="new-password"
           value={confirmarSenha}
           onChange={(e) => setConfirmarSenha(e.target.value)}
