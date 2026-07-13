@@ -55,9 +55,20 @@ export default function EditProfile() {
     e.preventDefault();
     setSaving(true);
     setSaved(false);
+    
     try {
-      await updateProfile(form);
+      const { avatar, ...dadosBasicos } = form;
+      
+      await updateProfile(dadosBasicos);
+      
+      if (avatar && avatar !== user?.avatar) {
+        const { uploadAvatarBase64 } = await import('../api/usuario');
+        await uploadAvatarBase64(avatar);
+      }
+      
       setSaved(true);
+    } catch (err) {
+      console.error('Erro ao salvar:', err);
     } finally {
       setSaving(false);
     }

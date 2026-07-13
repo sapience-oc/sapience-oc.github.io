@@ -45,3 +45,21 @@ export async function alterarSenha({ senhaAtual, novaSenha }) {
     body: { senhaAtual, novaSenha },
   });
 }
+
+export async function uploadAvatarBase64(base64Image) {
+  const cleanBase64 = base64Image.includes(',') 
+    ? base64Image.split(',')[1] 
+    : base64Image;
+    
+  return request('/usuarios/me/avatar/base64', {
+    method: 'POST',
+    body: { base64_image: cleanBase64 }
+  });
+}
+
+export async function updatePerfil(payload) {
+  const data = await request('/usuarios/me', { method: 'PATCH', body: payload });
+  storage.setUser(data);
+  setCached('perfil', data);
+  return data;
+}
