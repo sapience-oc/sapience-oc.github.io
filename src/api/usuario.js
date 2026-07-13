@@ -1,5 +1,4 @@
 import { request } from './client';
-import * as db from './db';
 import { storage } from '../utils/storage';
 import { comCache, setCached } from '../utils/cache';
 
@@ -21,7 +20,7 @@ export async function updatePerfil(payload) {
 }
 
 export async function listSeriesEscolares() {
-  return request('/series-escolares');
+  return comCache('series-escolares', 60 * 60 * 1000, () => request('/series-escolares'));
 }
 
 export async function listAcompanhamentos() {
@@ -38,4 +37,11 @@ export async function salvarAcompanhamento({ edicaoId, premiacao, inscrito, obse
 
 export async function removerPremiacao(acompanhamentoId) {
   return request(`/acompanhamentos/${acompanhamentoId}`, { method: 'PATCH', body: { premiacao: null } });
+}
+
+export async function alterarSenha({ senhaAtual, novaSenha }) {
+  return request('/usuarios/me/senha', {
+    method: 'POST',
+    body: { senhaAtual, novaSenha },
+  });
 }

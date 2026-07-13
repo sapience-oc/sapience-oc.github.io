@@ -5,6 +5,7 @@ import GradientSheet from '../components/GradientSheet';
 import BottomNav from '../components/BottomNav';
 import Modal from '../components/Modal';
 import { listCalendarEvents } from '../api/olimpiadas';
+import { parseDataLocal, formatarDataLonga, formatarPeriodoPrazo, listarDiasEntre } from '../utils/date';
 import './Calendar.css';
 
 const MONTHS = [
@@ -24,19 +25,11 @@ function buildMonthGrid(year, monthIndex) {
   return cells;
 }
 
-function parseDataLocal(iso) {
-  return new Date(`${iso}T00:00:00`);
-}
-
-function formatarDataLonga(iso) {
-  const d = parseDataLocal(iso);
-  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
-}
-
 export default function CalendarPage() {
   const navigate = useNavigate();
-  const [year, setYear] = useState(2026);
-  const [monthIndex, setMonthIndex] = useState(5);
+  const hoje = new Date();
+  const [year, setYear] = useState(hoje.getFullYear());
+  const [monthIndex, setMonthIndex] = useState(hoje.getMonth());
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState(null);
@@ -64,26 +57,45 @@ export default function CalendarPage() {
 
   const cells = useMemo(() => buildMonthGrid(year, monthIndex), [year, monthIndex]);
 
-  const eventosDoMes = useMemo(
-    () =>
-      events
-        .filter((e) => {
-          const d = parseDataLocal(e.data);
-          return d.getFullYear() === year && d.getMonth() === monthIndex;
-        })
-        .sort((a, b) => parseDataLocal(a.data) - parseDataLocal(b.data)),
-    [events, year, monthIndex]
-  );
+  const eventosDoMes = useMemo(() => {
+    const primeiroDiaDoMes = new Date(year, monthIndex, 1);
+    const ultimoDiaDoMes = new Date(year, monthIndex + 1, 0);
 
-  const eventosPorDia = useMemo(() => {
-    const map = new Map();
+    return events
+      .filter((e) => {
+        const inicio = parseDataLocal(e.data);
+        const fim = e.dataFim ? parseDataLocal(e.dataFim) : inicio;
+        return inicio <= ultimoDiaDoMes && fim >= primeiroDiaDoMes;
+      })
+      .sort((a, b) => parseDataLocal(a.data) - parseDataLocal(b.data));
+  }, [events, year, monthIndex]);
+
+  const { eventosPorDia, diasComMarcador, diasEmIntervalo } = useMemo(() => {
+    const porDia = new Map();
+    const comMarcador = new Set();
+    const emIntervalo = new Set();
+
     eventosDoMes.forEach((e) => {
-      const dia = parseDataLocal(e.data).getDate();
-      if (!map.has(dia)) map.set(dia, []);
-      map.get(dia).push(e);
+      const diasDoIntervalo = listarDiasEntre(e.data, e.dataFim);
+
+      diasDoIntervalo.forEach((dataObj, idx) => {
+        if (dataObj.getFullYear() !== year || dataObj.getMonth() !== monthIndex) return;
+        const dia = dataObj.getDate();
+
+        if (!porDia.has(dia)) porDia.set(dia, []);
+        porDia.get(dia).push(e);
+
+        const ehInicioOuFim = idx === 0 || idx === diasDoIntervalo.length - 1;
+        if (ehInicioOuFim) {
+          comMarcador.add(dia);
+        } else {
+          emIntervalo.add(dia);
+        }
+      });
     });
-    return map;
-  }, [eventosDoMes]);
+
+    return { eventosPorDia: porDia, diasComMarcador: comMarcador, diasEmIntervalo: emIntervalo };
+  }, [eventosDoMes, year, monthIndex]);
 
   function changeMonth(delta) {
     let newMonth = monthIndex + delta;
@@ -135,10 +147,14 @@ export default function CalendarPage() {
           <div className="cal-grid">
             {cells.map((day, idx) => {
               const temEvento = day && eventosPorDia.has(day);
+              const classes = ['cal-cell'];
+              if (!day) classes.push('empty');
+              if (day && diasComMarcador.has(day)) classes.push('has-event');
+              if (day && diasEmIntervalo.has(day)) classes.push('in-range');
               return (
                 <button
                   key={idx}
-                  className={`cal-cell ${day ? '' : 'empty'} ${temEvento ? 'has-event' : ''}`}
+                  className={classes.join(' ')}
                   disabled={!temEvento}
                   onClick={() => setSelectedDay(day)}
                 >
@@ -146,6 +162,15 @@ export default function CalendarPage() {
                 </button>
               );
             })}
+          </div>
+
+          <div className="cal-legend">
+            <span className="cal-legend-item">
+              <span className="cal-legend-dot solid" /> Prazo / inicio-fim
+            </span>
+            <span className="cal-legend-item">
+              <span className="cal-legend-dot range" /> Dentro do intervalo
+            </span>
           </div>
         </div>
 
@@ -162,7 +187,9 @@ export default function CalendarPage() {
               <Bell size={16} color="var(--gold)" />
               <div>
                 <div className="cal-event-title">{e.titulo}</div>
-                <div className="cal-event-note">{e.nota}</div>
+                <div className="cal-event-note">
+                  {e.nota} - {formatarPeriodoPrazo(e)}
+                </div>
               </div>
             </button>
           ))}
@@ -188,6 +215,7 @@ export default function CalendarPage() {
               <div className="day-modal-badge">{e.tipoPrazo?.nome || e.nome}</div>
               <div className="day-modal-body">
                 <div className="day-modal-event">{e.nome}</div>
+                <div className="day-modal-periodo">{formatarPeriodoPrazo(e)}</div>
                 <div className="day-modal-olympiad">
                   {e.olimpiadaSigla} - {e.olimpiadaNome} ({e.edicaoAno})
                 </div>

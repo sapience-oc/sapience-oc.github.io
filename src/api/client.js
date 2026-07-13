@@ -10,32 +10,65 @@ class ApiError extends Error {
   }
 }
 
+const MAX_TENTATIVAS = 4;
+const BACKOFF_BASE_MS = 400;
+
+function esperar(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function valeTentarDeNovo(err) {
+  if (err instanceof ApiError) {
+    return err.status >= 500;
+  }
+  return true;
+}
+
 export async function request(path, { method = 'GET', body, headers = {}, auth = true } = {}) {
   const token = storage.getToken();
 
-  const res = await fetch(`${API_BASE_URL}${path}`, {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(auth && token ? { Authorization: `Bearer ${token}` } : {}),
-      ...headers,
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  let ultimoErro;
+  for (let tentativa = 1; tentativa <= MAX_TENTATIVAS; tentativa++) {
+    try {
+      const res = await fetch(`${API_BASE_URL}${path}`, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(auth && token ? { Authorization: `Bearer ${token}` } : {}),
+          ...headers,
+        },
+        body: body ? JSON.stringify(body) : undefined,
+      });
 
-  let data = null;
-  try {
-    data = await res.json();
-  } catch {
-    data = null;
+      let data = null;
+      try {
+        data = await res.json();
+      } catch {
+        data = null;
+      }
+
+      if (!res.ok) {
+        throw new ApiError(data?.message || 'Erro na requisicao', res.status, data);
+      }
+
+      return data;
+    } catch (err) {
+      ultimoErro = err;
+
+      const ehUltimaTentativa = tentativa === MAX_TENTATIVAS;
+      if (ehUltimaTentativa || !valeTentarDeNovo(err)) {
+        throw err;
+      }
+
+      console.warn(
+        `[api] ${method} ${path} falhou (tentativa ${tentativa}/${MAX_TENTATIVAS}), tentando de novo...`,
+        err
+      );
+      await esperar(BACKOFF_BASE_MS * tentativa);
+    }
   }
 
-  if (!res.ok) {
-    throw new ApiError(data?.message || 'Erro na requisicao', res.status, data);
-  }
-
-  return data;
-
+  throw ultimoErro;
 }
 
 export { ApiError };

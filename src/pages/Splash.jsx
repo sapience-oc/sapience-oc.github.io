@@ -8,7 +8,9 @@ export default function Splash() {
   return (
     <div className="splash gradient-bg">
       <div className="splash-center">
-        <Logo size={110} />
+        <div className="splash-logo-reveal">
+          <Logo size={110} />
+        </div>
       </div>
       <button className="splash-cta" onClick={() => navigate('/login')}>
         COMECAR AGORA!

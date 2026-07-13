@@ -79,22 +79,34 @@ export default function Home() {
   const destaque = olimpiadas.find((o) => o.edicaoAtual?.status === 'inscricoes_abertas');
 
   const proximosPrazos = useMemo(() => {
+    const areasDoUsuario = new Set((user?.areas || []).map((a) => a.id));
+
     return olimpiadas
       .filter((o) => o.id !== destaque?.id)
       .slice()
       .sort((a, b) => {
+        const aInteresse = a.areas?.some((ar) => areasDoUsuario.has(ar.id)) ? 0 : 1;
+        const bInteresse = b.areas?.some((ar) => areasDoUsuario.has(ar.id)) ? 0 : 1;
+        if (aInteresse !== bInteresse) return aInteresse - bInteresse;
+
         const diasA = prazoAtivo(a.proximoPrazo)?.diasRestantes ?? Infinity;
         const diasB = prazoAtivo(b.proximoPrazo)?.diasRestantes ?? Infinity;
         return diasA - diasB;
       });
-  }, [olimpiadas, destaque]);
+  }, [olimpiadas, destaque, user]);
 
   const resultadosBusca = useMemo(() => {
     if (!searchTerm) return [];
     const termo = searchTerm.toLowerCase();
-    return olimpiadas.filter(
-      (o) => o.nome.toLowerCase().includes(termo) || o.sigla.toLowerCase().includes(termo)
-    );
+    return olimpiadas.filter((o) => {
+      const camposTexto = [o.nome, o.sigla, o.organizador];
+      const bateTexto = camposTexto.some((campo) => campo?.toLowerCase().includes(termo));
+      const bateArea = (o.areas || []).some((a) => a.nome?.toLowerCase().includes(termo));
+      const bateTipoInscricao = (o.tiposInscricao || []).some((t) =>
+        t.nome?.toLowerCase().includes(termo)
+      );
+      return bateTexto || bateArea || bateTipoInscricao;
+    });
   }, [olimpiadas, searchTerm]);
 
   return (

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, LogOut, Moon, Pencil, Trophy } from 'lucide-react';
+import { ChevronRight, KeyRound, LogOut, Moon, Pencil, Trophy } from 'lucide-react';
 import GradientSheet from '../components/GradientSheet';
 import BottomNav from '../components/BottomNav';
 import Avatar from '../components/Avatar';
@@ -52,6 +52,14 @@ export default function Profile() {
               <Pencil size={17} />
             </span>
             <span className="settings-row-label">Editar informações</span>
+            <ChevronRight size={17} color="var(--text-secondary)" />
+          </button>
+
+          <button className="settings-row" onClick={() => navigate('/perfil/senha')}>
+            <span className="settings-row-icon">
+              <KeyRound size={17} />
+            </span>
+            <span className="settings-row-label">Trocar senha</span>
             <ChevronRight size={17} color="var(--text-secondary)" />
           </button>
 

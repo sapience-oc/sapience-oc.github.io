@@ -12,6 +12,7 @@ import Favorites from './pages/Favorites';
 import CalendarPage from './pages/Calendar';
 import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
+import ChangePassword from './pages/ChangePassword';
 import Awards from './pages/Awards';
 import OlympiadDetail from './pages/OlympiadDetail';
 import PostDetail from './pages/PostDetail';
@@ -79,6 +80,14 @@ export default function App() {
                 element={
                   <RequireAuth>
                     <EditProfile />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="/perfil/senha"
+                element={
+                  <RequireAuth>
+                    <ChangePassword />
                   </RequireAuth>
                 }
               />

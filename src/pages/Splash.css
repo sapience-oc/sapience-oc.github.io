@@ -14,6 +14,23 @@
   justify-content: center;
 }
 
+.splash-logo-reveal {
+  -webkit-mask-image: linear-gradient(100deg, #000 0%, #000 42%, transparent 58%, transparent 100%);
+  mask-image: linear-gradient(100deg, #000 0%, #000 42%, transparent 58%, transparent 100%);
+  -webkit-mask-size: 260% 100%;
+  mask-size: 260% 100%;
+  -webkit-mask-position: 100% 0%;
+  mask-position: 100% 0%;
+  animation: sapience-logo-reveal 5s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+@keyframes sapience-logo-reveal {
+  to {
+    -webkit-mask-position: -60% 0%;
+    mask-position: -60% 0%;
+  }
+}
+
 .splash-cta {
   background: #fff;
   color: var(--olive-700);
@@ -23,4 +40,17 @@
   padding: 16px 40px;
   border-radius: var(--radius-pill);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+  animation: sapience-cta-in 0.6s ease forwards;
+  animation-delay: 5s;
+}
+
+@keyframes sapience-cta-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
 }

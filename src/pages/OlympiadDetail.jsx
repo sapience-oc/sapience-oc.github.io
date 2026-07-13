@@ -3,9 +3,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ExternalLink, MessageCircle, Plus, Star, X } from 'lucide-react';
 import GradientSheet from '../components/GradientSheet';
 import BackHeader from '../components/BackHeader';
+import Modal from '../components/Modal';
 import { TextField, TextArea, PrimaryButton } from '../components/FormControls';
 import { getOlimpiada, getEdicao, listPosts, createPost, toggleFavorito } from '../api/olimpiadas';
 import { openExternal } from '../utils/links';
+import { formatarPeriodoPrazo, formatarPeriodoPrazoCurto } from '../utils/date';
 import './OlympiadDetail.css';
 
 const STATUS_LABEL = {
@@ -14,12 +16,6 @@ const STATUS_LABEL = {
   em_andamento: 'Em andamento',
   encerrada: 'Encerrada',
 };
-
-function formatarData(iso) {
-  if (!iso) return '-';
-  const d = new Date(`${iso}T00:00:00`);
-  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
-}
 
 function NewTopicForm({ forumId, onCreated, onCancel }) {
   const [titulo, setTitulo] = useState('');
@@ -88,6 +84,7 @@ export default function OlympiadDetail() {
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState(null);
   const [showNewTopic, setShowNewTopic] = useState(false);
+  const [prazoSelecionado, setPrazoSelecionado] = useState(null);
 
   useEffect(() => {
     let ativo = true;
@@ -154,7 +151,8 @@ export default function OlympiadDetail() {
   }
 
   return (
-    <GradientSheet
+    <>
+      <GradientSheet
       maxHeight={225}
       minHeight={100}
       headerContent={
@@ -206,13 +204,23 @@ export default function OlympiadDetail() {
             <span className="detail-tag status">{STATUS_LABEL[edicao.status]}</span>
           </div>
 
+          {olimpiada.tiposInscricao?.length > 0 && (
+            <div className="detail-tags detail-tags-inscricao">
+              {olimpiada.tiposInscricao.map((t) => (
+                <span key={t.id} className="detail-tag outline">
+                  {t.nome}
+                </span>
+              ))}
+            </div>
+          )}
+
           {edicao.prazos.length > 0 && (
             <div className="detail-info-grid">
               {edicao.prazos.map((p) => (
-                <div key={p.id} className="info-box">
-                  <div className="info-label">{p.tipoPrazo?.nome || p.nome}</div>
-                  <div className="info-value">{formatarData(p.data)}</div>
-                </div>
+                <button key={p.id} className="info-box prazo-box" onClick={() => setPrazoSelecionado(p)}>
+                  <div className="info-label prazo-label">{p.tipoPrazo?.nome || p.nome}</div>
+                  <div className="info-value">{formatarPeriodoPrazoCurto(p)}</div>
+                </button>
               ))}
             </div>
           )}
@@ -294,6 +302,25 @@ export default function OlympiadDetail() {
         <Star size={16} fill={olimpiada.favoritado ? 'currentColor' : 'none'} />
         {olimpiada.favoritado ? 'Olimpíada favoritada' : 'Favoritar esta olimpíada'}
       </button>
-    </GradientSheet>
+      </GradientSheet>
+
+      <Modal
+        open={!!prazoSelecionado}
+        onClose={() => setPrazoSelecionado(null)}
+        title={prazoSelecionado?.tipoPrazo?.nome || prazoSelecionado?.nome}
+      >
+        {prazoSelecionado && (
+          <div className="prazo-modal-body">
+            {prazoSelecionado.tipoPrazo?.nome && prazoSelecionado.nome !== prazoSelecionado.tipoPrazo?.nome && (
+              <p className="prazo-modal-nome">{prazoSelecionado.nome}</p>
+            )}
+            <p className="prazo-modal-periodo">{formatarPeriodoPrazo(prazoSelecionado)}</p>
+            {prazoSelecionado.dataFim && prazoSelecionado.dataFim !== prazoSelecionado.data && (
+              <p className="prazo-modal-hint">Esse prazo e um intervalo — vale do inicio ao fim da data mostrada.</p>
+            )}
+          </div>
+        )}
+      </Modal>
+    </>
   );
 }

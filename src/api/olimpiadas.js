@@ -1,5 +1,4 @@
 import { request } from './client';
-import * as db from './db';
 import { storage } from '../utils/storage';
 import { comCache, invalidateCached, invalidateByPrefix } from '../utils/cache';
 
@@ -12,7 +11,7 @@ function currentUserId() {
 }
 
 export async function listAreas() {
-  return request('/areas');
+  return comCache('areas', 60 * 60 * 1000, () => request('/areas'));
 }
 
 export async function listOlimpiadas({ areaId } = {}) {

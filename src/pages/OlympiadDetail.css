@@ -89,6 +89,14 @@
   background: var(--olive-500);
   color: #fff;
 }
+.detail-tag.outline {
+  background: transparent;
+  border: 1px solid var(--olive-400);
+  color: var(--olive-700);
+}
+.detail-tags-inscricao {
+  margin-top: -12px;
+}
 
 .detail-info-grid {
   display: grid;
@@ -115,10 +123,43 @@
   display: block;
   cursor: pointer;
 }
+.prazo-box {
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+}
+.prazo-label {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.3;
+}
 .info-value {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.prazo-modal-body {
+  padding-bottom: 4px;
+}
+.prazo-modal-nome {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 10px;
+}
+.prazo-modal-periodo {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--olive-700);
+  margin: 0;
+}
+.prazo-modal-hint {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  margin: 10px 0 0;
 }
 
 .regulamento-link {
