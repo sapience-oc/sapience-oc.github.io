@@ -1,11 +1,5 @@
-// Le um arquivo de imagem escolhido pelo usuario, redimensiona no proprio
-// navegador (canvas) para nao guardar fotos gigantescas no localStorage /
-// no backend, e devolve uma data URL (base64) pronta pra usar em <img src>.
-//
-// Quando a API real estiver pronta, o ideal e trocar isso por um upload de
-// verdade (multipart/form-data) para um endpoint tipo POST /uploads e usar
-// a URL retornada — mas o redimensionamento no cliente continua sendo uma
-// boa pratica antes de enviar.
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 export function readAndResizeImage(file, { maxSize = 400, quality = 0.85 } = {}) {
   return new Promise((resolve, reject) => {
     if (!file || !file.type.startsWith('image/')) {
@@ -35,4 +29,14 @@ export function readAndResizeImage(file, { maxSize = 400, quality = 0.85 } = {})
     };
     reader.readAsDataURL(file);
   });
+}
+
+export function getImageUrl(imagePath) {
+  if (!imagePath) return null; 
+
+  if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+    return imagePath;
+  }
+
+  return `${API_BASE_URL}${imagePath}`;
 }

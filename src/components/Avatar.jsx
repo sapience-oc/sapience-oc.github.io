@@ -1,8 +1,9 @@
+import { getImageUrl } from '../utils/image';
 import './Avatar.css';
 
 export default function Avatar({ src, initials, size = 64, editable = false, onClick }) {
   const content = src ? (
-    <img src={src} alt="" className="avatar-img" />
+    <img src={getImageUrl(user.avatar)} alt="Avatar" className="avatar-img" />
   ) : (
     <span className="avatar-initials" style={{ fontSize: size * 0.32 }}>
       {initials || '??'}
