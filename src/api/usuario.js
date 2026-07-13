@@ -19,7 +19,7 @@ export async function uploadAvatarBase64(base64Image) {
     
   return request('/usuarios/me/avatar/base64', {
     method: 'POST',
-    body: { base64_image: cleanBase64 }
+    body: { imagemBase64: cleanBase64 } 
   });
 }
 
