@@ -55,17 +55,22 @@ export default function EditProfile() {
     e.preventDefault();
     setSaving(true);
     setSaved(false);
-    
+
     try {
       const { avatar, ...dadosBasicos } = form;
-      
-      await updateProfile(dadosBasicos);
-      
-      if (avatar && avatar !== user?.avatar) {
+      const avatarMudou = avatar !== user?.avatar;
+      const avatarEhBase64 = typeof avatar === 'string' && avatar.startsWith('data:image');
+
+      if (avatarMudou && avatarEhBase64) {
         const { uploadAvatarBase64 } = await import('../api/usuario');
         await uploadAvatarBase64(avatar);
+        await updateProfile(dadosBasicos);
+      } else if (avatarMudou) {
+        await updateProfile({ ...dadosBasicos, avatar });
+      } else {
+        await updateProfile(dadosBasicos);
       }
-      
+
       setSaved(true);
     } catch (err) {
       console.error('Erro ao salvar:', err);
