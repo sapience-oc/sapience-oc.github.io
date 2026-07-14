@@ -30,14 +30,10 @@ export function readAndResizeImage(file, { maxSize = 400, quality = 0.85 } = {})
 }
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
-const AVATAR_GENERICO_URL = 'https://srv1826188.hstgr.cloud/media/sapience/avatars/perfil.jpg';
 
 export function getImageUrl(imagePath, forceRefresh = false) {
   if (!imagePath) return null;
 
-  if (imagePath.includes('/avatars/')) {
-    return AVATAR_GENERICO_URL + (forceRefresh ? `?t=${Date.now()}` : '');
-  }
 
   if (imagePath.startsWith('data:image')) {
     return imagePath;
