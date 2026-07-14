@@ -14,11 +14,21 @@ export function requestNativeGalleryPick() {
 
 export function initNativeBridge() {
   if (typeof window === 'undefined') return;
-  if (window.SapienceNative) return; // ja inicializado
+  if (window.SapienceNative) return;
 
   window.SapienceNative = {
     setAvatar(dataUrlOuUrl) {
-      window.dispatchEvent(new CustomEvent(EVENT_NAME, { detail: dataUrlOuUrl }));
+      window.dispatchEvent(new CustomEvent('sapience:native-avatar', { detail: dataUrlOuUrl }));
+    },
+    async uploadAvatar(base64Puro) {
+      try {
+        const { uploadAvatarBase64 } = await import('../api/usuario.js');
+        const resultado = await uploadAvatarBase64(base64Puro);
+        window.dispatchEvent(new CustomEvent('sapience:native-avatar', { detail: resultado.avatar }));
+      } catch (err) {
+        console.error('[SapienceNative] Erro no upload do avatar:', err);
+        window.dispatchEvent(new CustomEvent('sapience:native-avatar-error', { detail: err.message }));
+      }
     },
   };
 }
