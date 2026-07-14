@@ -5,18 +5,6 @@ import { storage } from '../utils/storage';
 
 const AuthContext = createContext(null);
 
-function enviarTokenParaAppInventor() {
-  if (typeof window !== 'undefined' && window.AppInventor) {
-    const token = storage.getToken ? storage.getToken() : localStorage.getItem('token');
-    if (token) {
-      console.log('[AuthContext] Enviando token para App Inventor:', token.length, 'caracteres');
-      window.AppInventor.setWebViewString(`sapience:token:${token}`);
-    } else {
-      console.warn('[AuthContext] Token não encontrado no storage!');
-    }
-  }
-}
-
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [booting, setBooting] = useState(true);
@@ -28,8 +16,6 @@ export function AuthProvider({ children }) {
       if (mounted) {
         setUser(restoredUser);
         setBooting(false);
-        
-        enviarTokenParaAppInventor();
       }
     })();
     return () => {
@@ -40,22 +26,12 @@ export function AuthProvider({ children }) {
   const login = useCallback(async (identifier, password) => {
     const data = await authApi.login({ identifier, password });
     setUser(data.user);
-
-    setTimeout(() => {
-      enviarTokenParaAppInventor();
-    }, 100);
-
     return data.user;
   }, []);
 
   const register = useCallback(async (payload) => {
     const data = await authApi.register(payload);
     setUser(data.user);
-    
-    setTimeout(() => {
-      enviarTokenParaAppInventor();
-    }, 100);
-    
     return data.user;
   }, []);
 
@@ -70,12 +46,6 @@ export function AuthProvider({ children }) {
 
   const updateProfile = useCallback(async (payload) => {
     const updated = await usuarioApi.updatePerfil(payload);
-    setUser(updated);
-    return updated;
-  }, []);
-
-  const removeAvatar = useCallback(async () => {
-    const updated = await usuarioApi.removerAvatar();
     setUser(updated);
     return updated;
   }, []);
@@ -97,7 +67,6 @@ export function AuthProvider({ children }) {
     forgotPassword,
     logout,
     updateProfile,
-    removeAvatar,
     refreshUser,
   };
 
