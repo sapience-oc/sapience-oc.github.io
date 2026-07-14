@@ -35,8 +35,8 @@
 }
 
 .gsheet-sheet-content {
-  padding: 42px 20px calc(100px + var(--safe-bottom));
-  min-height: 100%;
+  padding: 42px 20px calc(80px + var(--safe-bottom));
+  min-height: calc(100dvh - 200px);
 }
 
 .overlap-card {
