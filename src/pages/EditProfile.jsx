@@ -58,15 +58,16 @@ export default function EditProfile() {
 
     try {
       const { avatar, ...dadosBasicos } = form;
-      const avatarMudou = avatar !== user?.avatar;
-      const avatarEhBase64 = typeof avatar === 'string' && avatar.startsWith('data:image');
+      const avatarAnterior = user?.avatar || null;
+      const avatarMudou = avatar !== avatarAnterior;
+      const ehFotoNovaLocal = !!avatar && avatar.startsWith('data:');
 
-      if (avatarMudou && avatarEhBase64) {
+      if (avatarMudou && ehFotoNovaLocal) {
         const { uploadAvatarBase64 } = await import('../api/usuario');
         await uploadAvatarBase64(avatar);
         await updateProfile(dadosBasicos);
-      } else if (avatarMudou) {
-        await updateProfile({ ...dadosBasicos, avatar });
+      } else if (avatarMudou && !avatar) {
+        await updateProfile({ ...dadosBasicos, avatar: null });
       } else {
         await updateProfile(dadosBasicos);
       }
