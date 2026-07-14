@@ -63,19 +63,13 @@ export default function EditProfile() {
       const ehFotoNovaLocal = !!avatar && avatar.startsWith('data:');
 
       if (avatarMudou && ehFotoNovaLocal) {
-        // Foto nova escolhida (ainda so em base64 local): envia pro
-        // endpoint dedicado de upload, e o resto dos dados via PATCH.
         const { uploadAvatarBase64 } = await import('../api/usuario');
         await uploadAvatarBase64(avatar);
         await updateProfile(dadosBasicos);
       } else if (avatarMudou && !avatar) {
-        // Usuario clicou em "Remover": usa o endpoint dedicado (mesma
-        // logica do upload), em vez de confiar no PATCH generico com
-        // avatar:null - alguns backends ignoram null em PATCH parcial.
         await removeAvatar();
         await updateProfile(dadosBasicos);
       } else {
-        // Avatar nao mudou (ou ja era so uma URL antiga) - nao reenvia.
         await updateProfile(dadosBasicos);
       }
 
