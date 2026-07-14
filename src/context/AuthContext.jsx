@@ -50,6 +50,12 @@ export function AuthProvider({ children }) {
     return updated;
   }, []);
 
+  const removeAvatar = useCallback(async () => {
+    const updated = await usuarioApi.removeAvatar();
+    setUser(updated);
+    return updated;
+  }, []);
+
   const refreshUser = useCallback(async () => {
     const fresh = await usuarioApi.getPerfil();
     setUser(fresh);
