@@ -212,9 +212,9 @@ export default function Home() {
                     <div className="featured-footer">
                       <span>
                         {destaque.proximoPrazo.diasRestantes > 0
-                          ? `Encerra em ${destaque.proximoPrazo.diasRestantes} ${destaque.proximoPrazo.diasRestantes === 1 ? 'dia' : 'dias'}`
+                          ? `Faltam ${destaque.proximoPrazo.diasRestantes} ${destaque.proximoPrazo.diasRestantes === 1 ? 'dia' : 'dias'}`
                           : destaque.proximoPrazo.diasRestantes === 0
-                          ? 'Encerra hoje!'
+                          ? 'É hoje!'
                           : 'Prazo encerrado'}
                       </span>
                     </div>
