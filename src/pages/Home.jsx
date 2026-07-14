@@ -76,7 +76,7 @@ export default function Home() {
 
   const emBusca = searchTerm.length > 0;
 
-  const destaque = olimpiadas.find((o) => o.edicaoAtual?.status === 'inscricoes_abertas');
+  const destaque =  olimpiadas.find((o) => o.destaque === true)
 
   const proximosPrazos = useMemo(() => {
     const areasDoUsuario = new Set((user?.areas || []).map((a) => a.id));
