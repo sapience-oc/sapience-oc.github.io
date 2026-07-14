@@ -14,7 +14,7 @@ function apenasNumeros(valor) {
 }
 
 export default function EditProfile() {
-  const { user, updateProfile } = useAuth();
+  const { user, updateProfile, removeAvatar } = useAuth();
   const navigate = useNavigate();
   const [series, setSeries] = useState([]);
   const [areas, setAreas] = useState([]);
@@ -63,12 +63,19 @@ export default function EditProfile() {
       const ehFotoNovaLocal = !!avatar && avatar.startsWith('data:');
 
       if (avatarMudou && ehFotoNovaLocal) {
+        // Foto nova escolhida (ainda so em base64 local): envia pro
+        // endpoint dedicado de upload, e o resto dos dados via PATCH.
         const { uploadAvatarBase64 } = await import('../api/usuario');
         await uploadAvatarBase64(avatar);
         await updateProfile(dadosBasicos);
       } else if (avatarMudou && !avatar) {
-        await updateProfile({ ...dadosBasicos, avatar: null });
+        // Usuario clicou em "Remover": usa o endpoint dedicado (mesma
+        // logica do upload), em vez de confiar no PATCH generico com
+        // avatar:null - alguns backends ignoram null em PATCH parcial.
+        await removeAvatar();
+        await updateProfile(dadosBasicos);
       } else {
+        // Avatar nao mudou (ou ja era so uma URL antiga) - nao reenvia.
         await updateProfile(dadosBasicos);
       }
 
@@ -136,11 +143,11 @@ export default function EditProfile() {
           ))}
         </div>
 
-        {saved && <div className="auth-banner" style={{ marginTop: 18 }}>Informacoes salvas!</div>}
+        {saved && <div className="auth-banner" style={{ marginTop: 18 }}>Informações salvas!</div>}
 
         <div style={{ marginTop: 22 }}>
           <PrimaryButton type="submit" loading={saving}>
-            Salvar alteracoes
+            Salvar alterações
           </PrimaryButton>
         </div>
       </form>

@@ -17,10 +17,28 @@ export async function uploadAvatarBase64(base64Image) {
     ? base64Image.split(',')[1] 
     : base64Image;
     
-  return request('/usuarios/me/avatar/base64', {
+  const data = await request('/usuarios/me/avatar/base64', {
     method: 'POST',
     body: { imagemBase64: cleanBase64 } 
   });
+  // O endpoint pode devolver so { avatar: "url" } em vez do Usuario
+  // inteiro - nao sobrescreve o resto do usuario em cache com isso.
+  const usuarioAtual = storage.getUser();
+  const usuarioAtualizado = data && data.id ? data : { ...usuarioAtual, avatar: data?.avatar ?? usuarioAtual?.avatar };
+  storage.setUser(usuarioAtualizado);
+  setCached('perfil', usuarioAtualizado);
+  return usuarioAtualizado;
+}
+
+export async function removerAvatar() {
+  const data = await request('/usuarios/me/avatar', { method: 'DELETE' });
+  // Idem: garante avatar:null no cache local mesmo se o backend so
+  // devolver um ack, em vez do Usuario inteiro atualizado.
+  const usuarioAtual = storage.getUser();
+  const usuarioAtualizado = data && data.id ? data : { ...usuarioAtual, avatar: null };
+  storage.setUser(usuarioAtualizado);
+  setCached('perfil', usuarioAtualizado);
+  return usuarioAtualizado;
 }
 
 export async function updatePerfil(payload) {

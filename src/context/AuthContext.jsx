@@ -74,6 +74,12 @@ export function AuthProvider({ children }) {
     return updated;
   }, []);
 
+  const removeAvatar = useCallback(async () => {
+    const updated = await usuarioApi.removerAvatar();
+    setUser(updated);
+    return updated;
+  }, []);
+
   const refreshUser = useCallback(async () => {
     const fresh = await usuarioApi.getPerfil();
     setUser(fresh);
@@ -91,6 +97,7 @@ export function AuthProvider({ children }) {
     forgotPassword,
     logout,
     updateProfile,
+    removeAvatar,
     refreshUser,
   };
 
