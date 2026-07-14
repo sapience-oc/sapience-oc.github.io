@@ -77,15 +77,23 @@ export default function CalendarPage() {
 
     eventosDoMes.forEach((e) => {
       const diasDoIntervalo = listarDiasEntre(e.data, e.dataFim);
+      const duracaoDias = diasDoIntervalo.length - 1; // dias entre data e dataFim
+      const intervaloLongo = duracaoDias > 7;
 
       diasDoIntervalo.forEach((dataObj, idx) => {
         if (dataObj.getFullYear() !== year || dataObj.getMonth() !== monthIndex) return;
         const dia = dataObj.getDate();
+        const ehInicioOuFim = idx === 0 || idx === diasDoIntervalo.length - 1;
+
+        // Intervalo maior que 7 dias: so marca (e deixa clicavel) o
+        // primeiro e o ultimo dia, sem pintar/registrar os dias do meio -
+        // evita um mes inteiro virando uma mancha verde so por causa de
+        // um unico prazo longo (tipo "periodo de submissao" de 2 meses).
+        if (intervaloLongo && !ehInicioOuFim) return;
 
         if (!porDia.has(dia)) porDia.set(dia, []);
         porDia.get(dia).push(e);
 
-        const ehInicioOuFim = idx === 0 || idx === diasDoIntervalo.length - 1;
         if (ehInicioOuFim) {
           comMarcador.add(dia);
         } else {
