@@ -7,7 +7,7 @@
   background: var(--surface);
   padding: 10px 8px calc(10px + var(--safe-bottom));
   border-top: 1px solid var(--surface-muted);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  flex-shrink: 0;
 }
 
 .bottom-nav-item {

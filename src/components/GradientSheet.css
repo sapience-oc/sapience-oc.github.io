@@ -2,6 +2,9 @@
   position: relative;
   flex: 1;
   overflow: hidden;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .gsheet-header {
@@ -12,6 +15,7 @@
   display: flex;
   align-items: flex-start;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .gsheet-header-inner {
@@ -20,8 +24,8 @@
 }
 
 .gsheet-sheet {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   background: var(--surface);
@@ -29,13 +33,14 @@
   border-top-right-radius: var(--radius-lg);
   z-index: 2;
   scrollbar-width: none;
+  min-height: 0;
 }
 .gsheet-sheet::-webkit-scrollbar {
   display: none;
 }
 
 .gsheet-sheet-content {
-  padding: 42px 20px calc(100px + var(--safe-bottom));
+  padding: 42px 20px calc(80px + var(--safe-bottom));
   min-height: 100%;
 }
 
