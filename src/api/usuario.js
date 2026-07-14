@@ -31,13 +31,17 @@ export async function uploadAvatarBase64(base64Image) {
 }
 
 export async function removerAvatar() {
-  const data = await request('/usuarios/me/avatar', { method: 'DELETE' });
-  // Idem: garante avatar:null no cache local mesmo se o backend so
-  // devolver um ack, em vez do Usuario inteiro atualizado.
+  const data = await request('/usuarios/me', { 
+    method: 'PATCH', 
+    body: { avatar: null } 
+  });
+  
   const usuarioAtual = storage.getUser();
   const usuarioAtualizado = data && data.id ? data : { ...usuarioAtual, avatar: null };
+  
   storage.setUser(usuarioAtualizado);
   setCached('perfil', usuarioAtualizado);
+  
   return usuarioAtualizado;
 }
 
