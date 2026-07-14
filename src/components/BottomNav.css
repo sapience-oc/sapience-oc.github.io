@@ -1,5 +1,5 @@
 .bottom-nav {
-  position: relative;
+  position: fixed;
   z-index: 10;
   display: flex;
   justify-content: space-around;
