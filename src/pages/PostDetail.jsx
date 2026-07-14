@@ -114,10 +114,6 @@ export default function PostDetail() {
                 <span className="reply-author">{c.autor?.nome}</span>
               </div>
               <p className="reply-text">{c.conteudo}</p>
-              <button className="reply-like">
-                <Heart size={13} />
-                {c.curtidas}
-              </button>
             </div>
           </div>
         ))}
