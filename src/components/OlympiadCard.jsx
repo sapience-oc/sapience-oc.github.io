@@ -2,6 +2,8 @@ import { Heart, Clock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { prazoAtivo } from '../utils/prazo';
 import './OlympiadCard.css';
+import { getImageUrl } from '../utils/image.js';
+
 
 function urgencyColor(dias) {
   if (dias == null) return 'var(--olive-500)';
@@ -30,7 +32,7 @@ export default function OlympiadCard({ olimpiada, onToggleFavorito }) {
   return (
     <button className="oly-card" onClick={() => navigate(`/olimpiada/${olimpiada.id}`)}>
       {olimpiada.imagemUrl ? (
-        <img className="oly-card-image" src={olimpiada.imagemUrl} alt="" />
+        <img className="oly-card-image" src={getImageUrl(olimpiada.imagemUrl)} alt="" />
       ) : (
         <div className="oly-card-icon" style={{ background: olimpiada.corDestaque || 'var(--olive-500)' }}>
           {olimpiada.sigla?.slice(0, 3).toUpperCase()}

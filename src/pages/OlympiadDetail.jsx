@@ -9,6 +9,7 @@ import { getOlimpiada, getEdicao, listPosts, createPost, toggleFavorito } from '
 import { openExternal } from '../utils/links';
 import { formatarPeriodoPrazo, formatarPeriodoPrazoCurto } from '../utils/date';
 import './OlympiadDetail.css';
+import { getImageUrl } from '../utils/image.js';
 
 const STATUS_LABEL = {
   em_breve: 'Em breve',
@@ -160,7 +161,7 @@ export default function OlympiadDetail() {
           <BackHeader onBack={() => navigate(-1)} />
           <div className="detail-title-row">
             {olimpiada.imagemUrl ? (
-              <img className="detail-image" src={olimpiada.imagemUrl} alt="" />
+              <img className="detail-image" src={getImageUrl(olimpiada.imagemUrl)} alt="" />
             ) : (
               <div className="detail-image placeholder" style={{ background: olimpiada.corDestaque }}>
                 {olimpiada.sigla?.slice(0, 3).toUpperCase()}
