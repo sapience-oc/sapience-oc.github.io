@@ -197,13 +197,26 @@ export default function Home() {
                   style={{ background: `linear-gradient(135deg, ${destaque.corDestaque}, #223018)` }}
                   onClick={() => navigate(`/olimpiada/${destaque.id}`)}
                 >
-                  <span className="featured-badge">Inscrições abertas</span>
-                  <div className="featured-name">{destaque.sigla} {destaque.edicaoAtual?.ano}</div>
+                  {}
+                  <span className="featured-badge">
+                    {destaque.proximoPrazo?.nome || 'Inscrições abertas'}
+                  </span>
+
+                  <div className="featured-name">
+                    {destaque.sigla} {destaque.edicaoAtual?.ano}
+                  </div>
                   <div className="featured-desc">{destaque.nome}</div>
-                  {prazoAtivo(destaque.proximoPrazo) && (
+
+                  {}
+                  {destaque.proximoPrazo && (
                     <div className="featured-footer">
-                      <span>Encerra em {prazoAtivo(destaque.proximoPrazo).diasRestantes} dias!</span>
-                      <span className="featured-link">Ver edital</span>
+                      <span>
+                        {destaque.proximoPrazo.diasRestantes > 0
+                          ? `Encerra em ${destaque.proximoPrazo.diasRestantes} ${destaque.proximoPrazo.diasRestantes === 1 ? 'dia' : 'dias'}`
+                          : destaque.proximoPrazo.diasRestantes === 0
+                          ? 'Encerra hoje!'
+                          : 'Prazo encerrado'}
+                      </span>
                     </div>
                   )}
                 </button>
