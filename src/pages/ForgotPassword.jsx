@@ -20,7 +20,7 @@ export default function ForgotPassword() {
       await forgotPassword(email);
       navigate('/login', {
         replace: true,
-        state: { message: 'Se o e-mail existir, enviamos uma nova senha.' },
+        state: { message: 'Se o e-mail existir, enviamos uma nova senha. (Caso o e-mail com a senha não chegar, verifique a caixa de spam)' },
       });
     } catch (err) {
       setError(err.message || 'Nao foi possivel enviar. Tente novamente.');
