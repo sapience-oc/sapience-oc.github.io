@@ -23,7 +23,7 @@ export default function GradientSheet({
 
       <div
         className={`gsheet-sheet ${contentClassName}`}
-        style={{ marginTop: headerHeight }}
+        style={{ top: headerHeight }}
         onScroll={onScroll}
       >
         <div className="gsheet-sheet-content">{children}</div>

@@ -21,7 +21,10 @@
 
 .gsheet-sheet {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   background: var(--surface);
@@ -36,7 +39,7 @@
 
 .gsheet-sheet-content {
   padding: 42px 20px calc(80px + var(--safe-bottom));
-  min-height: calc(100dvh - 200px);
+  min-height: 100%
 }
 
 .overlap-card {
