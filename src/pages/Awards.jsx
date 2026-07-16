@@ -80,7 +80,7 @@ function AddAwardForm({ onSaved, onCancel }) {
       return;
     }
     if (!premiacao) {
-      setError('Selecione a premiacao.');
+      setError('Selecione a premiação.');
       return;
     }
     setSaving(true);
@@ -97,7 +97,7 @@ function AddAwardForm({ onSaved, onCancel }) {
   return (
     <form className="award-form" onSubmit={handleSubmit}>
       <div className="award-form-header">
-        <span>Nova premiacao</span>
+        <span>Nova premiação</span>
         <button type="button" onClick={onCancel} aria-label="Fechar">
           <X size={18} />
         </button>
@@ -134,13 +134,13 @@ function AddAwardForm({ onSaved, onCancel }) {
       </SelectField>
 
       <SelectField
-        label="Premiacao"
+        label="Premiação"
         value={premiacao}
         onChange={(e) => setPremiacao(e.target.value)}
         required
       >
         <option value="" disabled>
-          Selecione a premiacao
+          Selecione a premiação
         </option>
         {PREMIACOES_VALIDAS.map((p) => (
           <option key={p} value={p}>
@@ -150,7 +150,7 @@ function AddAwardForm({ onSaved, onCancel }) {
       </SelectField>
 
       <PrimaryButton type="submit" loading={saving}>
-        Salvar premiacao
+        Salvar premiação
       </PrimaryButton>
     </form>
   );
@@ -206,14 +206,14 @@ export default function Awards() {
       ) : (
         <button className="add-award-btn" onClick={() => setShowForm(true)}>
           <Plus size={16} />
-          Adicionar premiacao
+          Adicionar premiação
         </button>
       )}
 
       {loading && <p className="muted-text">Carregando...</p>}
       {!loading && erro && <p className="muted-text">{erro}</p>}
       {!loading && !erro && premiacoes.length === 0 && (
-        <p className="muted-text">Voce ainda nao registrou nenhuma premiacao.</p>
+        <p className="muted-text">Voce ainda nao registrou nenhuma premiação.</p>
       )}
 
       <div className="awards-list">
@@ -228,7 +228,7 @@ export default function Awards() {
                 {a.premiacao} ({a.edicao?.ano})
               </div>
             </div>
-            <button className="award-remove" onClick={() => handleRemove(a.id)} aria-label="Remover premiacao">
+            <button className="award-remove" onClick={() => handleRemove(a.id)} aria-label="Remover premiação">
               <Trash2 size={16} />
             </button>
           </div>
