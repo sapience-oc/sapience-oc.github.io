@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { listarAvatares } from '../api/usuario';
+import { getImageUrl } from '../utils/image';
 import './AvatarSelectionModal.css';
 
 export default function AvatarSelectionModal({ isOpen, onClose, onSelect }) {
@@ -40,7 +41,7 @@ export default function AvatarSelectionModal({ isOpen, onClose, onSelect }) {
                   className="avatar-grid-item"
                   onClick={() => onSelect(av.id, av.url)}
                 >
-                  <img src={av.url} alt={`Avatar ${av.id}`} />
+                  <img src={getImageUrl(av.url)} alt={`Avatar ${av.id}`} />
                 </button>
               ))}
             </div>

@@ -4,6 +4,9 @@ export function getImageUrl(imagePath) {
   if (!imagePath) return null;
 
   if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    if (imagePath.includes('sapience-oc.github.io/media')) {
+      return imagePath.replace('https://sapience-oc.github.io', API_BASE_URL);
+    }
     return imagePath;
   }
 
@@ -11,7 +14,7 @@ export function getImageUrl(imagePath) {
     return imagePath;
   }
 
-  const baseUrl = API_BASE_URL.replace(/\/$/, ''); 
+  const baseUrl = API_BASE_URL.replace(/\/$/, '');
   const path = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
   
   return `${baseUrl}${path}`;
