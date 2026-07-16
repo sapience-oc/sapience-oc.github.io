@@ -2,48 +2,40 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 26px;
+  gap: 12px;
+  margin-bottom: 24px;
 }
 
 .avatar-editor-preview {
   position: relative;
 }
 
-.avatar-editor-preview .avatar {
-  background: var(--surface-muted);
-  border-color: var(--surface-muted);
-  color: var(--olive-600);
-}
-
 .avatar-editor-camera {
   position: absolute;
-  bottom: -2px;
-  right: -2px;
-  width: 30px;
-  height: 30px;
+  bottom: 0;
+  right: 0;
+  background: var(--olive-600);
+  color: white;
+  border: 2px solid var(--surface);
   border-radius: 50%;
-  background: var(--olive-500);
-  color: #fff;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid var(--surface);
-}
-
-.avatar-editor-actions {
-  display: flex;
-  gap: 16px;
-  margin-top: 12px;
+  cursor: pointer;
 }
 
 .avatar-editor-link {
-  font-size: 12.5px;
-  font-weight: 700;
+  background: none;
+  border: none;
   color: var(--olive-600);
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
 }
-.avatar-editor-link.danger {
-  color: var(--danger);
+
+.avatar-editor-link:hover {
+  text-decoration: underline;
 }

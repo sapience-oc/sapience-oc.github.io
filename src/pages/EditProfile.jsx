@@ -14,7 +14,7 @@ function apenasNumeros(valor) {
 }
 
 export default function EditProfile() {
-  const { user, updateProfile, removeAvatar } = useAuth();
+  const { user, updateProfile } = useAuth();
   const navigate = useNavigate();
   const [series, setSeries] = useState([]);
   const [areas, setAreas] = useState([]);
@@ -24,7 +24,8 @@ export default function EditProfile() {
     inep: user?.inep || '',
     serieEscolarId: user?.serieEscolar?.id || '',
     areaIds: (user?.areas || []).map((a) => a.id),
-    avatar: user?.avatar || null,
+    avatarId: user?.avatarId || null,
+    avatarUrl: user?.avatar || null,
   });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -54,25 +55,14 @@ export default function EditProfile() {
   async function handleSubmit(e) {
     e.preventDefault();
     setSaving(true);
-    setSaved(false);
-
     try {
-      const { avatar, ...dadosBasicos } = form;
-      const avatarAnterior = user?.avatar || null;
-      const avatarMudou = avatar !== avatarAnterior;
-      const ehFotoNovaLocal = !!avatar && avatar.startsWith('data:');
-
-      if (avatarMudou && ehFotoNovaLocal) {
-        const { uploadAvatarBase64 } = await import('../api/usuario');
-        await uploadAvatarBase64(avatar);
-        await updateProfile(dadosBasicos);
-      } else if (avatarMudou && !avatar) {
-        await removeAvatar();
-        await updateProfile(dadosBasicos);
-      } else {
-        await updateProfile(dadosBasicos);
+      const { avatarId, avatarUrl, ...dadosBasicos } = form;
+      const payload = { ...dadosBasicos };
+      if (avatarId !== user?.avatarId) {
+        payload.avatarId = avatarId;
       }
 
+      await updateProfile(payload);
       setSaved(true);
     } catch (err) {
       console.error('Erro ao salvar:', err);
@@ -93,9 +83,15 @@ export default function EditProfile() {
       }
     >
       <AvatarUpload
-        value={form.avatar}
+        value={form.avatarUrl}
         initials={user?.initials}
-        onChange={(avatar) => setForm((prev) => ({ ...prev, avatar }))}
+        onChange={(newAvatarId, newAvatarUrl) => 
+          setForm((prev) => ({ 
+            ...prev, 
+            avatarId: newAvatarId, 
+            avatarUrl: newAvatarUrl 
+          }))
+        }
       />
 
       <form onSubmit={handleSubmit}>

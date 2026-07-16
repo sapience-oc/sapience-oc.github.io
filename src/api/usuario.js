@@ -4,45 +4,12 @@ import { comCache, setCached } from '../utils/cache';
 
 const TTL_PERFIL_MS = 30 * 60 * 1000;
 
-function currentUserId() {
-  return storage.getToken();
-}
-
 export async function getPerfil() {
   return comCache('perfil', TTL_PERFIL_MS, () => request('/usuarios/me'));
 }
 
-export async function uploadAvatarBase64(base64Image) {
-  const cleanBase64 = base64Image.includes(',') 
-    ? base64Image.split(',')[1] 
-    : base64Image;
-    
-  const data = await request('/usuarios/me/avatar/base64', {
-    method: 'POST',
-    body: { imagemBase64: cleanBase64 } 
-  });
-  // O endpoint pode devolver so { avatar: "url" } em vez do Usuario
-  // inteiro - nao sobrescreve o resto do usuario em cache com isso.
-  const usuarioAtual = storage.getUser();
-  const usuarioAtualizado = data && data.id ? data : { ...usuarioAtual, avatar: data?.avatar ?? usuarioAtual?.avatar };
-  storage.setUser(usuarioAtualizado);
-  setCached('perfil', usuarioAtualizado);
-  return usuarioAtualizado;
-}
-
-export async function removerAvatar() {
-  const data = await request('/usuarios/me', { 
-    method: 'PATCH', 
-    body: { avatar: null } 
-  });
-  
-  const usuarioAtual = storage.getUser();
-  const usuarioAtualizado = data && data.id ? data : { ...usuarioAtual, avatar: null };
-  
-  storage.setUser(usuarioAtualizado);
-  setCached('perfil', usuarioAtualizado);
-  
-  return usuarioAtualizado;
+export async function listarAvatares() {
+  return request('/avatares');
 }
 
 export async function updatePerfil(payload) {

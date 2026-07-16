@@ -1,35 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
-import { Camera, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { Camera } from 'lucide-react';
 import Avatar from './Avatar';
-import { readAndResizeImage } from '../utils/image';
-import { onNativeAvatar, requestNativeGalleryPick } from '../utils/nativeBridge';
+import AvatarSelectionModal from './AvatarSelectionModal';
 import './AvatarUpload.css';
 
 export default function AvatarUpload({ value, initials, onChange }) {
-  const fileInputRef = useRef(null);
-  const [error, setError] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => onNativeAvatar((dataUrl) => onChange(dataUrl)), [onChange]);
-
-  function handlePickClick() {
-    const isNative = requestNativeGalleryPick();
-    
-    if (!isNative) {
-      fileInputRef.current?.click();
-    }
-  }
-
-  async function handleFileChange(e) {
-    const file = e.target.files?.[0];
-    e.target.value = '';
-    if (!file) return;
-    setError('');
-    try {
-      const dataUrl = await readAndResizeImage(file, { maxSize: 400, quality: 0.85 });
-      onChange(dataUrl);
-    } catch (err) {
-      setError(err.message || 'Nao foi possivel usar essa imagem.');
-    }
+  function handleSelect(avatarId, avatarUrl) {
+    onChange(avatarId, avatarUrl);
+    setIsModalOpen(false);
   }
 
   return (
@@ -39,31 +19,24 @@ export default function AvatarUpload({ value, initials, onChange }) {
         <button
           type="button"
           className="avatar-editor-camera"
-          onClick={handlePickClick}
+          onClick={() => setIsModalOpen(true)}
           aria-label="Trocar foto de perfil"
         >
           <Camera size={15} />
         </button>
       </div>
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={handleFileChange}
-      />
+      
       <div className="avatar-editor-actions">
-        <button type="button" className="avatar-editor-link" onClick={handlePickClick}>
-          {value ? 'Trocar foto' : 'Adicionar foto'}
+        <button type="button" className="avatar-editor-link" onClick={() => setIsModalOpen(true)}>
+          {value ? 'Trocar avatar' : 'Escolher avatar'}
         </button>
-        {value && (
-          <button type="button" className="avatar-editor-link danger" onClick={() => onChange(null)}>
-            <Trash2 size={13} />
-            Remover
-          </button>
-        )}
       </div>
-      {error && <div className="auth-banner error">{error}</div>}
+
+      <AvatarSelectionModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onSelect={handleSelect} 
+      />
     </div>
   );
 }

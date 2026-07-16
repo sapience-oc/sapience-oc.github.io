@@ -2,17 +2,16 @@ import { getImageUrl } from '../utils/image';
 import './Avatar.css';
 
 export default function Avatar({ src, initials, size = 64, editable = false, onClick }) {
-  const imageUrl = getImageUrl(src, true);
-  
-  const content = src ? (
+  const imageUrl = src ? getImageUrl(src) : null;
+
+  const content = imageUrl ? (
     <img 
-      key={Date.now()}
       src={imageUrl} 
       alt="Avatar" 
       className="avatar-img" 
     />
   ) : (
-    <span className="avatar-initials" style={{ fontSize: size * 0.32 }}>
+    <span className="avatar-initials" style={{ fontSize: size * 0.35 }}>
       {initials || '??'}
     </span>
   );
