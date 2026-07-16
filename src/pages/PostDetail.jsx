@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Heart, Send, Megaphone } from 'lucide-react';
 import GradientSheet from '../components/GradientSheet';
 import BackHeader from '../components/BackHeader';
+import Avatar from '../components/Avatar';
 import { getPost, listComentarios, createComentario } from '../api/olimpiadas';
 import './PostDetail.css';
 
@@ -90,7 +91,9 @@ export default function PostDetail() {
       <div className="thread-op">
         <div className="thread-op-question">{post.titulo}</div>
         <p className="thread-op-body">{post.conteudo}</p>
-        <div className="thread-op-author">Por: {post.autor?.nome || 'Estudante'}</div>
+        <div className="thread-op-author">
+          Por: {post.autor?.nome || 'Estudante'}
+        </div>
       </div>
 
       <form className="reply-input-row" onSubmit={handleSend}>
@@ -108,7 +111,11 @@ export default function PostDetail() {
         <div className="reply-list-title">Respostas ({comentarios.length})</div>
         {comentarios.map((c) => (
           <div key={c.id} className="reply-item">
-            <div className="reply-avatar">{c.autor?.initials || '??'}</div>
+            <Avatar 
+              src={c.autor?.avatar} 
+              nome={c.autor?.nome} 
+              size={36} 
+            />
             <div className="reply-body">
               <div className="reply-meta">
                 <span className="reply-author">{c.autor?.nome}</span>

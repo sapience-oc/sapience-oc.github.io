@@ -1,8 +1,21 @@
 import { getImageUrl } from '../utils/image';
 import './Avatar.css';
 
-export default function Avatar({ src, initials, size = 64, editable = false, onClick }) {
+function getInitials(nome) {
+  if (!nome) return '??';
+  
+  const primeiroNome = nome.trim().split(/\s+/)[0];
+  
+  if (primeiroNome.length >= 2) {
+    return primeiroNome.substring(0, 2).toUpperCase();
+  }
+  
+  return '??';
+}
+
+export default function Avatar({ src, initials, nome, size = 64, editable = false, onClick }) {
   const imageUrl = src ? getImageUrl(src) : null;
+  const displayInitials = initials || getInitials(nome) || '??';
 
   const content = imageUrl ? (
     <img 
@@ -12,7 +25,7 @@ export default function Avatar({ src, initials, size = 64, editable = false, onC
     />
   ) : (
     <span className="avatar-initials" style={{ fontSize: size * 0.35 }}>
-      {initials || '??'}
+      {displayInitials}
     </span>
   );
 

@@ -3,10 +3,32 @@ import { useNavigate } from 'react-router-dom';
 import { Award, Plus, Trash2, X } from 'lucide-react';
 import GradientSheet from '../components/GradientSheet';
 import BackHeader from '../components/BackHeader';
-import { TextField, SelectField, PrimaryButton, GhostButton } from '../components/FormControls';
+import { SelectField, PrimaryButton } from '../components/FormControls';
 import { listOlimpiadas, getOlimpiada } from '../api/olimpiadas';
 import { listPremiacoes, salvarAcompanhamento, removerPremiacao } from '../api/usuario';
 import './Awards.css';
+
+const PREMIACOES_VALIDAS = [
+  'Ouro Nacional',
+  'Prata Nacional',
+  'Bronze Nacional',
+  'Menção Honrosa Nacional',
+  'Ouro Regional',
+  'Prata Regional',
+  'Bronze Regional',
+  'Menção Honrosa Regional',
+  'Troféu',
+  'Honra ao Mérito',
+];
+
+function corDaPremiacao(texto = '') {
+  const t = texto.toLowerCase();
+  if (t.includes('ouro')) return '#d9a441';
+  if (t.includes('prata')) return '#9aa3ad';
+  if (t.includes('bronze')) return '#b0703f';
+  if (t.includes('troféu') || t.includes('honra')) return '#8b5cf6';
+  return 'var(--olive-500)';
+}
 
 function AddAwardForm({ onSaved, onCancel }) {
   const [olimpiadas, setOlimpiadas] = useState([]);
@@ -57,13 +79,13 @@ function AddAwardForm({ onSaved, onCancel }) {
       setError('Selecione a edicao da olimpiada.');
       return;
     }
-    if (!premiacao.trim()) {
-      setError('Descreva a premiacao (ex: Ouro, Medalha de bronze...).');
+    if (!premiacao) {
+      setError('Selecione a premiacao.');
       return;
     }
     setSaving(true);
     try {
-      await salvarAcompanhamento({ edicaoId, premiacao: premiacao.trim(), inscrito: true });
+      await salvarAcompanhamento({ edicaoId, premiacao, inscrito: true });
       onSaved();
     } catch (err) {
       setError(err.message || 'Nao foi possivel salvar.');
@@ -111,31 +133,27 @@ function AddAwardForm({ onSaved, onCancel }) {
         ))}
       </SelectField>
 
-      <TextField
+      <SelectField
         label="Premiacao"
-        type="text"
-        placeholder="Ex: Ouro, Prata, Bronze, Mencao honrosa..."
         value={premiacao}
         onChange={(e) => setPremiacao(e.target.value)}
         required
-      />
+      >
+        <option value="" disabled>
+          Selecione a premiacao
+        </option>
+        {PREMIACOES_VALIDAS.map((p) => (
+          <option key={p} value={p}>
+            {p}
+          </option>
+        ))}
+      </SelectField>
 
       <PrimaryButton type="submit" loading={saving}>
         Salvar premiacao
       </PrimaryButton>
     </form>
   );
-}
-
-const PLACE_COLOR = {
-  ouro: '#d9a441',
-  prata: '#9aa3ad',
-  bronze: '#b0703f',
-};
-
-function corDaPremiacao(texto = '') {
-  const chave = texto.trim().toLowerCase();
-  return PLACE_COLOR[chave] || 'var(--olive-500)';
 }
 
 export default function Awards() {
