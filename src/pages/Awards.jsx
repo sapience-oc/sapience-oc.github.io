@@ -42,7 +42,12 @@ function AddAwardForm({ onSaved, onCancel }) {
 
   useEffect(() => {
     listOlimpiadas()
-      .then(setOlimpiadas)
+      .then((data) => {
+        const ordenadas = [...data].sort((a, b) => 
+          a.nome.localeCompare(b.nome, 'pt-BR', { sensitivity: 'base' })
+        );
+        setOlimpiadas(ordenadas);
+      })
       .catch((err) => console.error('Erro ao carregar olimpiadas:', err));
   }, []);
 
