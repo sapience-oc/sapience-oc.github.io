@@ -4,6 +4,26 @@ import AuthLayout from '../components/AuthLayout';
 import { TextField, PasswordField, PrimaryButton } from '../components/FormControls';
 import { useAuth } from '../context/AuthContext';
 
+function getLoginErrorMessage(err) {
+  if (err.status === 0 || err.message.includes('Sem conexão')) {
+    return 'Sem conexão com a internet. Verifique sua rede e tente novamente.';
+  }
+  
+  if (err.status === 401) {
+    return 'E-mail ou senha incorretos. Verifique seus dados e tente novamente.';
+  }
+  
+  if (err.status === 400) {
+    return err.message || 'Dados inválidos. Verifique o formulário.';
+  }
+  
+  if (err.status >= 500) {
+    return 'Ocorreu um erro em nossos servidores. Tente novamente em alguns instantes.';
+  }
+  
+  return err.message || 'Não foi possível fazer login. Tente novamente.';
+}
+
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -24,7 +44,7 @@ export default function Login() {
       await login(identifier, password);
       navigate('/home', { replace: true });
     } catch (err) {
-      setError(err.message || 'Nao foi possivel entrar. Tente novamente.');
+      setError(getLoginErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -40,7 +60,7 @@ export default function Login() {
 
       <form onSubmit={handleSubmit}>
         <TextField
-          label="e-mail"
+          label="E-mail ou nome de usuário"
           type="text"
           value={identifier}
           onChange={(e) => setIdentifier(e.target.value)}
@@ -57,7 +77,7 @@ export default function Login() {
 
         <div style={{ marginTop: 8 }}>
           <PrimaryButton type="submit" loading={loading}>
-            Log in
+            Entrar
           </PrimaryButton>
         </div>
       </form>

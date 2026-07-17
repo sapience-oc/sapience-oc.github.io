@@ -48,11 +48,16 @@ export async function request(path, { method = 'GET', body, headers = {}, auth =
       }
 
       if (!res.ok) {
-        throw new ApiError(data?.message || 'Erro na requisicao', res.status, data);
+        const errorMessage = data?.detail || data?.message || 'Ocorreu um erro inesperado.';
+        throw new ApiError(errorMessage, res.status, data);
       }
 
       return data;
     } catch (err) {
+      if (err instanceof TypeError && err.message.includes('fetch')) {
+        throw new ApiError('Sem conexão com a internet. Verifique sua rede.', 0, null);
+      }
+
       ultimoErro = err;
 
       const ehUltimaTentativa = tentativa === MAX_TENTATIVAS;
