@@ -9,8 +9,8 @@ import { listSeriesEscolares } from '../api/usuario';
 import { listAreas } from '../api/olimpiadas';
 import './EditProfile.css';
 
-function apenasNumeros(valor) {
-  return valor.replace(/\D/g, '');
+function formatarInep(valor) {
+  return valor.replace(/\D/g, '').slice(0, 8);
 }
 
 export default function EditProfile() {
@@ -97,15 +97,18 @@ export default function EditProfile() {
       <form onSubmit={handleSubmit}>
         <TextField label="Nome" type="text" value={form.nome} onChange={update('nome')} required />
         <TextField label="E-mail" type="email" value={form.email} onChange={update('email')} required />
+        
         <TextField
           label="INEP da escola"
           optional
-          type="tel"
+          type="text"
           inputMode="numeric"
-          pattern="[0-9]*"
+          pattern="[0-9]{8}"
+          maxLength={8}
           value={form.inep}
-          onChange={(e) => setForm((prev) => ({ ...prev, inep: apenasNumeros(e.target.value) }))}
+          onChange={(e) => setForm((prev) => ({ ...prev, inep: formatarInep(e.target.value) }))}
         />
+        
         <SelectField label="Série escolar" value={form.serieEscolarId} onChange={update('serieEscolarId')}>
           <option value="" disabled>
             Selecione
